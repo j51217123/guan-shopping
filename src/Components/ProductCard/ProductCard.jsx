@@ -7,7 +7,7 @@ const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
         <Card
             sx={{
                 maxWidth: { xs: "97%", md: "47%", lg: "23%" },
-                width: "100%",
+                width: "auto",
                 boxShadow: "0 2px 6px 0 rgb(0 0 0 / 6%)",
                 textAlign: "center",
             }}>

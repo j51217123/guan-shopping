@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "guan-shopping-bf7df",
+    "guan-shopping": "guan-shopping-bf7df"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

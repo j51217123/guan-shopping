@@ -1,0 +1,21 @@
+.slick-slide div {
+    display: flex;
+    justify-content: center;
+}
+
+.slick-list:hover {
+    cursor: grab;
+}
+
+.slick-prev {
+    left: 50px !important;
+}
+
+.slick-next {
+    right: 50px !important;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    color: rgba(0, 0, 0, 0.4);
+}

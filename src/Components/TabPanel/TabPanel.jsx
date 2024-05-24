@@ -15,7 +15,7 @@ function TabPanel(props) {
             {value === index && (
                 <Box sx={{ p: 2, gap: "10px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     {tabsImagesData?.map((tabImages, index) => {
-                        return <Box key={index} component="img" src={tabImages} width="800px" height="600px" />
+                        return <Box sx={{objectFit: 'contain'}} key={index} component="img" src={tabImages} width="800px" height="600px" />
                     })}
                     <Typography dangerouslySetInnerHTML={{ __html: `${children}` }} sx={{ p: 1 }} />
                 </Box>

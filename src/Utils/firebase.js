@@ -126,6 +126,7 @@ const setProductImageToStorage = async imageFile => {
 }
 
 const setUploadProductImageToStorage = async (imageFile, productTitle) => {
+    console.log("🚀 - imageFile:", imageFile)
     const folderRef = ref(storage, `Images/products/${productTitle}`)
     const imageRef = ref(storage, `Images/products/${imageFile.name}`)
     const removeRef = ref(storage, `Images/products/`)

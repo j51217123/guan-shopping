@@ -11,6 +11,8 @@ import {
     setUploadProductImageToStorage,
     setProductTabImageToStorage,
 } from "../../Utils/firebase"
+import { checkEmpty } from "../../Utils/UtilityJS"
+
 
 const EditProduct = () => {
     const [productTitle, setProductTitle] = useState("")
@@ -40,26 +42,27 @@ const EditProduct = () => {
 
     const formValidate = yup.object().shape({
         imageUpload: yup.mixed().test("repeat productName", "${value} 此商品名稱已存在", (files, testContext) => {
+            if (mainImg === undefined) {
+                return true
+            } else if (mainImg && files.length === 0) {
+                return true
+            }
             const isDuplicate =
                 files.length === 0
-                    ? decodeURIComponent(mainImg).includes(productTitle)
-                    : decodeURIComponent(mainImg).includes(files[0].name.split(".")[0])
+                ? decodeURIComponent(mainImg).includes(productTitle)
+                : decodeURIComponent(mainImg).includes(files[0].name.split(".")[0])
+
             if (!isDuplicate) {
-                console.log("file:", files[0].name.split(".")[0])
-                console.log("product", productTitle)
                 return testContext.createError({
                     message: `${files[0].name.split(".")[0]} 與 ${productTitle} 商品名稱不相符`,
                 })
-            } else {
-                return true
-            }
+            } else return true
         }),
     })
 
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(formValidate),
@@ -77,16 +80,13 @@ const EditProduct = () => {
 
     const handleChangeMainImage = event => {
         const file = event.target.files[0]
-        setImageUpload(prevState => ({
-            ...prevState,
-            imageFile: file,
-            imageUrl: URL.createObjectURL(file),
-        }))
-        // setImageUpload({
-        //     ...imageUpload,
-        //     imageFile: file,
-        //     imageUrl: URL.createObjectURL(file),
-        // })
+        if(file) {
+            setImageUpload(prevState => ({
+                ...prevState,
+                imageFile: file,
+                imageUrl: URL.createObjectURL(file),
+            }))
+        }
     }
 
     const handleTabImageUpload = e => {
@@ -171,7 +171,24 @@ const EditProduct = () => {
         }
     }
 
+    async function urlToFile(url, filename, mimeType) {
+        try {
+            // 使用 fetch API 下载文件内容
+            const response = await fetch(url)
+            const blob = await response.blob()
+
+            // 使用 Blob 创建 File 对象
+            return new File([blob], filename, { type: mimeType })
+        } catch (error) {
+            console.error('Error converting URL to File:', error)
+            return null
+        }
+    }
+
     const handleEditClick = () => {
+
+        const { imageFile } = imageUpload
+
         confirmAlert({
             title: `編輯商品`,
             message: `確定要編輯${editProductInfo.title}?`,
@@ -179,7 +196,15 @@ const EditProduct = () => {
                 {
                     label: "是",
                     onClick: () => {
-                        setUploadProductImageToStorage(imageFile, productTitle)
+                        if(checkEmpty(imageFile)) {
+                            const mimeType = "image/jpeg"
+                            urlToFile(mainImg, productTitle, mimeType).then(file => {
+                                if (file) {
+                                    console.log('File created:', file)
+                                    setUploadProductImageToStorage(file, productTitle)
+                                }
+                            })
+                        }
                         setProductTabImageToStorage(uploadTabImageList)
                         setUpdateSelectedProductToFirestore(editProductInfo, () => {
                             alert("編輯商品成功!")
@@ -188,6 +213,7 @@ const EditProduct = () => {
                             }, 500)
                         })
                     },
+
                 },
                 {
                     label: "否",
@@ -195,6 +221,7 @@ const EditProduct = () => {
             ],
         })
     }
+
     return (
         <Box
             sx={{

@@ -3,8 +3,10 @@ import { useDispatch } from "react-redux"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import { Button, ImageListItem, ImageList, Typography, Box, Container } from "@mui/material"
 import TabPanel from "../TabPanel/TabPanel"
-import { setOrderList } from "../../Redux/Store/productSlice"
+import productSlice from "../../Redux/Product/ProductSlice"
 import "./ProductDetail.css"
+
+const { setOrderList } = productSlice.actions
 
 const ProductDetail = ({
     itemData: {

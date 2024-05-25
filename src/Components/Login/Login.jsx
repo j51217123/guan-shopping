@@ -18,10 +18,12 @@ import {
     Avatar,
     Snackbar,
 } from "@mui/material"
-import { setLogin } from "../../Redux/Store/userSlice"
+import userSlice from "../../Redux/User/UserSlice"
 import { handleLoginWithGoogle, handleLoginOrRegister } from "../../Utils/firebase"
 import GoogleIcon from "../../Assets/Images/google-icon.svg"
 import Logo from "../../Assets/Images/logo-2.png"
+
+const { setLogin } = userSlice.actions
 
 const theme = createTheme()
 

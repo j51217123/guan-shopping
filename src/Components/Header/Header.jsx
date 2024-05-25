@@ -15,9 +15,11 @@ import {
     Tooltip,
     MenuItem,
 } from "@mui/material"
-import { setLogout } from "../../Redux/Store/userSlice"
+import userSlice from "../../Redux/User/UserSlice"
 import { handleLogoutAuth } from "../../Utils/firebase"
 import Logo from "../../Assets/Images/logo-2.png"
+
+const { setLogout } = userSlice.actions
 
 const Header = () => {
     const userState = useSelector(state => state.user)

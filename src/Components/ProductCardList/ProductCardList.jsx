@@ -1,11 +1,17 @@
-import React from "react"
-import { useDispatch } from "react-redux"
-import { Box, Typography } from "@mui/material"
+import React, {useState,useEffect} from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Box, Typography, Skeleton } from "@mui/material"
 import ProductCard from "../ProductCard/ProductCard"
-import { setOrderList } from "../../Redux/Store/productSlice"
+import productSlice from "../../Redux/Product/ProductSlice"
 
-const ProductCardList = ({ itemData }) => {
+
+const { setOrderList } = productSlice.actions
+
+
+const ProductCardList = () => {
     const dispatch = useDispatch()
+    const productsData = useSelector(state => state.products.productsData)
+    
     const handleAddToCart = item => {
         let orderInfo = {
             title: item.title,
@@ -23,7 +29,7 @@ const ProductCardList = ({ itemData }) => {
                 精選商品
             </Typography>
             <Box display="flex" flexWrap="wrap" sx={{ gap: "15px" }}>
-                {itemData.map(card => {
+                {productsData?.map(card => {
                     return (
                         <ProductCard
                             key={card.title}
@@ -42,4 +48,31 @@ const ProductCardList = ({ itemData }) => {
     )
 }
 
+const SkeletonLoader = () => (
+    <Box>
+        <Skeleton variant="rectangular" width="100%" height={118} style={{ marginBottom: 16 }} />
+        <Skeleton variant="text" />
+        <Skeleton variant="text" width="60%" />
+    </Box>
+)
+
+// const LazyProductCardListWithDelay = ({ itemData }) => {
+//     const [isLoading, setIsLoading] = useState(true);
+  
+//     useEffect(() => {
+//       const timer = setTimeout(() => {
+//         setIsLoading(false);
+//       }, 3000); // 模拟延迟 2 秒
+  
+//       return () => clearTimeout(timer);
+//     }, []);
+  
+//     if (isLoading) {
+//       return <SkeletonLoader />
+//     }
+  
+//     return <ProductCardList itemData={itemData} />;
+//   };
+
+// export default LazyProductCardListWithDelay
 export default ProductCardList

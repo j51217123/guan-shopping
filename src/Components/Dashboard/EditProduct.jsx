@@ -23,7 +23,7 @@ const EditProduct = () => {
     })
     const [uploadTabImageList, setUploadTabImageList] = useState([])
     const productsData = useSelector(state => state.products.productsData)
-    useEffect(() => {}, [editProductInfo])
+    useEffect(() => {}, [uploadTabImageList, editProductInfo])
 
     const {
         title,
@@ -91,6 +91,7 @@ const EditProduct = () => {
 
     const handleTabImageUpload = e => {
         const files = Array.from(e.target.files)
+        console.log("🚀 - files:", files)
         let tempData = []
         if (files.length === 1) {
             setUploadTabImageList([

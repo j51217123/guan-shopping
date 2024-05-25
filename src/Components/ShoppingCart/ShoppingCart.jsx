@@ -8,7 +8,9 @@ import {
     ShoppingCart as ShoppingCartIcon,
 } from "@mui/icons-material"
 import { Avatar, Box, Button, Drawer, List, ListItem, ListItemText, Typography, IconButton } from "@mui/material"
-import { setIncrement, setDecrement, setRemove } from "../../Redux/Store/productSlice"
+import productSlice from "../../Redux/Product/ProductSlice"
+
+const { setIncrement, setDecrement, setRemove } = productSlice.actions
 
 const ShoppingCart = () => {
     const dispatch = useDispatch()

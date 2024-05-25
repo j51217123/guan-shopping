@@ -1,0 +1,129 @@
+import { createSlice, current } from "@reduxjs/toolkit"
+
+const initialState = {
+    productsData: [],
+    imagesData: [],
+    subImagesData: [],
+    tabsImagesData: [],
+    orderList: [],
+    productLoading: false,
+}
+
+export const productSlice = createSlice({
+    name: "product",
+    initialState,
+    reducers: {
+        setProductsData: (state, action) => {
+            state.productsData.forEach(product => {
+                const selectedImageIndex = state.imagesData.findIndex(image => decodeURIComponent(image).includes(product.title))
+                const selectedSubImageIndex = state.subImagesData.findIndex(image => decodeURIComponent(image).includes(product.title))
+                let tempData = []
+                if (selectedImageIndex !== -1) {
+                    product.mainImg = state.imagesData[selectedImageIndex]
+                }
+                if (selectedSubImageIndex !== -1) {
+                    tempData = [...tempData, state.subImagesData[selectedSubImageIndex]]
+                    product.subImgList = tempData
+                }
+            })
+        },
+
+        getProductsData(state, action) {
+            state.productLoading = true
+        },
+
+        getProductsDataSuccess(state, action) {
+            state.productLoading = false
+            state.productsData = action.payload
+        },
+
+        getProductsDataFailure(state, action) {
+            state.productLoading = false
+        },
+
+        getProductImagesFromStorage(state, action) {
+            state.productLoading = true
+        },
+
+        getProductImagesFromStorageSuccess(state, action) {
+            state.productLoading = false
+            state.imagesData = action.payload
+        },
+
+        getProductImagesFromStorageFailure(state, action) {
+            state.productLoading = false
+        },
+
+        getSubImagesFromStorage(state, action) {
+            state.productLoading = true
+        },
+
+        getSubImagesFromStorageSuccess(state, action) {
+            state.productLoading = false
+            state.subImagesData = action.payload
+        },
+
+        getSubImagesFromStorageFailure(state, action) {
+            state.productLoading = false
+        },
+
+        getTabImagesFromStorage(state, action) {
+            state.productLoading = true
+        },
+
+        getTabImagesFromStorageSuccess(state, action) {
+            state.productLoading = false
+            state.productsData = state.productsData.map(product => {
+                return {
+                    ...product,
+                    tabsImagesData: action.payload,
+                }
+            })
+        },
+
+        getTabImagesFromStorageFailure(state, action) {
+            state.productLoading = false
+        },
+
+        setOrderList: (state, action) => {
+            console.log(action.payload, "setOrderList action.payload")
+            const { productId } = action.payload
+            const selectedItemIndex = state.orderList.findIndex(item => item.productId === productId)
+            if (selectedItemIndex === -1) {
+                state.orderList = [...state.orderList, action.payload]
+            } else {
+                state.orderList[selectedItemIndex] = {
+                    ...state.orderList[selectedItemIndex],
+                    quantity: action.payload.quantity
+                }
+            }
+        },
+
+        setIncrement: (state, action) => {
+            const { productId } = action.payload
+            console.log(action.payload,'action.payload');
+            state.orderList.forEach(item => {
+                if (item.productId === productId) return (item.quantity += 1)
+            })
+        },
+
+        setDecrement: (state, action) => {
+            const { productId } = action.payload
+            state.orderList.forEach(item => {
+                if (item.productId === productId) return (item.quantity -= 1)
+            })
+        },
+
+        setRemove: (state, action) => {
+            const { productId } = action.payload
+            const selectedItemIndex = state.orderList.findIndex(item => item.productId === productId)
+            state.orderList.splice(selectedItemIndex, 1)
+        },
+    },
+})
+
+// Action creators are generated for each case reducer function
+// export const { setProductsData, setOrderList, setIncrement, setDecrement, setRemove } = productSlice.actions
+
+// export default productSlice.reducer
+export default productSlice

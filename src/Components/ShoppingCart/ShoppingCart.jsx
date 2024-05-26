@@ -18,17 +18,11 @@ const ShoppingCart = () => {
     const orderList = useSelector(state => state.products.orderList)
     const [drawerOpen, setDrawerOpen] = React.useState(false)
 
-    const handleIncrement = ({ quantity, productId }) => {
-        dispatch(setIncrement({ quantity, productId }))
-    }
+    const handleIncrement = title => dispatch(setIncrement(title))
 
-    const handleDecrement = ({ quantity, productId }) => {
-        dispatch(setDecrement({ quantity, productId }))
-    }
+    const handleDecrement = title => dispatch(setDecrement(title))
 
-    const handleRemove = productId => {
-        dispatch(setRemove({ productId }))
-    }
+    const handleRemove = productId => dispatch(setRemove({ productId }))
 
     return param["*"] !== "Checkout" &&
         param["*"] !== "login" &&
@@ -82,6 +76,7 @@ const ShoppingCart = () => {
                 {orderList.length > 0 ? (
                     <List sx={{ width: "250px" }}>
                         {orderList.map(item => {
+                            console.log(item,'iiitem');
                             return (
                                 <ListItem
                                     key={item.title}
@@ -95,7 +90,7 @@ const ShoppingCart = () => {
                                             edge="end"
                                             aria-label="delete"
                                             onClick={() => {
-                                                console.log("item.productId:", item.productId)
+                                                console.log("item.productId:", item)
                                                 handleRemove(item.productId)
                                             }}>
                                             <DeleteIcon />
@@ -141,11 +136,8 @@ const ShoppingCart = () => {
                                                     width: "16px",
                                                     height: "16px",
                                                 }}
-                                                disabled={item.quantity === 1 ? true : false}
-                                                onClick={() => {
-                                                    const { productId, quantity } = item
-                                                    handleDecrement({ quantity, productId })
-                                                }}>
+                                                disabled={item.quantity === 1}
+                                                onClick={() => handleDecrement(item.title)}>
                                                 <RemoveIcon fontSize="inherit" />
                                             </IconButton>
                                             <Typography component="span" variant="button">
@@ -155,11 +147,8 @@ const ShoppingCart = () => {
                                                 aria-label="add"
                                                 size="small"
                                                 sx={{ width: "16px", height: "16px" }}
-                                                disabled={item.quantity === item.stock ? true : false}
-                                                onClick={() => {
-                                                    const { productId, quantity } = item
-                                                    handleIncrement({ quantity, productId })
-                                                }}>
+                                                disabled={item.quantity === item.stock}
+                                                onClick={() => handleIncrement(item.title)}>
                                                 <AddIcon fontSize="inherit" />
                                             </IconButton>
                                         </Button>

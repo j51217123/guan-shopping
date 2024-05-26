@@ -28,6 +28,8 @@ export function* rootSaga() {
         takeEvery(userAction.loginWithGoogle.type, userSaga.loginWithGoogleSaga),
         takeEvery(userAction.loginRequest.type, userSaga.loginWithEmailSaga),
         takeEvery(userAction.logoutRequest.type, userSaga.logoutAuthSaga),
+        takeEvery(userAction.createUserRequest.type, userSaga.createUserSaga),
+        takeEvery(userAction.checkAdmin.type, userSaga.checkAdminSaga),
         
     ])
 }

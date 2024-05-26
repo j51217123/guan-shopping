@@ -23,7 +23,7 @@ import userSlice from "../../Redux/User/UserSlice"
 import GoogleIcon from "../../Assets/Images/google-icon.svg"
 import Logo from "../../Assets/Images/logo-2.png"
 
-const { loginRequest, logoutRequest, loginWithGoogle } = userSlice.actions
+const { checkAdmin, loginRequest, logoutRequest, loginWithGoogle, createUserRequest } = userSlice.actions
 
 const theme = createTheme()
 
@@ -63,7 +63,9 @@ const Login = () => {
 
     const onSubmit = async data => {
         const { email, password } = data
-        dispatch(loginRequest({email, password}))
+        // dispatch(loginRequest({email, password}))
+        dispatch(createUserRequest({email, password}))
+        dispatch(checkAdmin('WIxhtjD0fxWxixDKdHKKorQVDrx2'))
     }
 
     return (

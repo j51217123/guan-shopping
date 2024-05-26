@@ -15,8 +15,12 @@ export const productSlice = createSlice({
     reducers: {
         setProductsData: (state, action) => {
             state.productsData.forEach(product => {
-                const selectedImageIndex = state.imagesData.findIndex(image => decodeURIComponent(image).includes(product.title))
-                const selectedSubImageIndex = state.subImagesData.findIndex(image => decodeURIComponent(image).includes(product.title))
+                const selectedImageIndex = state.imagesData.findIndex(image =>
+                    decodeURIComponent(image).includes(product.title)
+                )
+                const selectedSubImageIndex = state.subImagesData.findIndex(image =>
+                    decodeURIComponent(image).includes(product.title)
+                )
                 let tempData = []
                 if (selectedImageIndex !== -1) {
                     product.mainImg = state.imagesData[selectedImageIndex]
@@ -122,30 +126,39 @@ export const productSlice = createSlice({
         },
 
         setOrderList: (state, action) => {
-            const { productId } = action.payload
-            const selectedItemIndex = state.orderList.findIndex(item => item.productId === productId)
+            const { title } = action.payload
+            const selectedItemIndex = state.orderList.findIndex(item => item.title === title)
             if (selectedItemIndex === -1) {
+                console.log(1)
                 state.orderList = [...state.orderList, action.payload]
             } else {
+                console.log(2)
                 state.orderList[selectedItemIndex] = {
                     ...state.orderList[selectedItemIndex],
-                    quantity: action.payload.quantity
+                    quantity: action.payload.quantity,
                 }
             }
         },
 
         setIncrement: (state, action) => {
-            const { productId } = action.payload
-            console.log(action.payload,'action.payload');
-            state.orderList.forEach(item => {
-                if (item.productId === productId) return (item.quantity += 1)
+            state.orderList = state.orderList.map(item => {
+                if (item.title === action.payload) {
+                    return {
+                        ...item,
+                        quantity: item.quantity + 1,
+                    }
+                } else return item
             })
         },
 
         setDecrement: (state, action) => {
-            const { productId } = action.payload
-            state.orderList.forEach(item => {
-                if (item.productId === productId) return (item.quantity -= 1)
+            state.orderList = state.orderList.map(item => {
+                if (item.title === action.payload) {
+                    return {
+                        ...item,
+                        quantity: item.quantity - 1,
+                    }
+                } else return item
             })
         },
 

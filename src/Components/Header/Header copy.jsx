@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Menu as MenuIcon, AccountCircle as AccountCircleIcon } from "@mui/icons-material";
+import React, { useState, useEffect } from "react"
+import { Link as RouterLink } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
+import { Menu as MenuIcon, AccountCircle as AccountCircleIcon } from "@mui/icons-material"
 import {
     AppBar,
     Box,
@@ -14,76 +14,59 @@ import {
     Link,
     Tooltip,
     MenuItem,
-} from "@mui/material";
-import userSlice from "../../Redux/User/UserSlice";
-import { handleLogoutAuth } from "../../Utils/firebase";
-import Logo from "../../Assets/Images/logo-2.png";
+} from "@mui/material"
+import userSlice from "../../Redux/User/UserSlice"
+import { handleLogoutAuth } from "../../Utils/firebase"
+import Logo from "../../Assets/Images/logo-2.png"
 
-const { logoutRequest } = userSlice.actions;
+const { setLogout } = userSlice.actions
 
 const Header = () => {
-    const userState = useSelector((state) => state.user);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
-    const [userMenuRoutes, setUserMenuRoutes] = useState([
+    const userState = useSelector(state => state.user)
+    const dispatch = useDispatch()
+    const [anchorElNav, setAnchorElNav] = useState(null)
+    const [anchorElUser, setAnchorElUser] = useState(null)
+    // useEffect(() => {}, [userState.profile])
+    useEffect(() => {
+    console.log(userState.profile);
+}, [userState.profile]);
+
+    const pages = ["Home", "Products", "Login", "Dashboard"]
+    const settings = ["訂單紀錄", "登出"]
+    const menuRoutes = [
         {
             path: "/login",
             query: "登入",
         },
-    ]);
+        {
+            path: "/",
+            query: "登出",
+        },
+    ]
 
-    useEffect(() => {
-        if (userState.isLogin) {
-            setUserMenuRoutes([
-                {
-                    path: "/dashboard",
-                    query: "訂單紀錄",
-                },
-                {
-                    path: "/",
-                    query: "登出",
-                },
-            ]);
-        } else {
-            setUserMenuRoutes([
-                {
-                    path: "/login",
-                    query: "登入",
-                },
-            ]);
-        }
-    }, [userState.isLogin]);
-
-    const pages = ["Home", "Products", "Login", "Dashboard"];
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
+    const handleOpenNavMenu = event => {
+        setAnchorElNav(event.currentTarget)
+    }
+    const handleOpenUserMenu = event => {
+        setAnchorElUser(event.currentTarget)
+    }
 
     const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
+        setAnchorElNav(null)
+    }
 
-    const handleCloseUserMenu = (setting) => {
-        if (setting === "登出") {
-            dispatch(logoutRequest());
-            // handleLogoutAuth().then(() => {
-            //     navigate("/");
-            // });
+    const handleCloseUserMenu = setting => {
+        if (setting.currentTarget.innerText === "登出") {
+            dispatch(setLogout())
+            handleLogoutAuth()
         }
-        setAnchorElUser(null);
-    };
+        setAnchorElUser(null)
+    }
 
     return (
         <AppBar
             position="static"
-            sx={{ backgroundColor: "#fff", boxShadow: "0 2px 6px 0 rgb(0 0 0 / 6%)", color: "#323232" }}
-        >
+            sx={{ backgroundColor: "#fff", boxShadow: "0 2px 6px 0 rgb(0 0 0 / 6%)", color: "#323232" }}>
             <Container component="section">
                 <Toolbar disableGutters>
                     <Link
@@ -93,8 +76,7 @@ const Header = () => {
                         sx={{
                             mr: 2,
                             display: { xs: "none", md: "flex" },
-                        }}
-                    >
+                        }}>
                         <img className="nav-logo" src={Logo} alt="Porousway Logo" width="40" height="40" />
                     </Link>
                     <Typography
@@ -110,8 +92,7 @@ const Header = () => {
                             letterSpacing: ".3rem",
                             color: "inherit",
                             textDecoration: "none",
-                        }}
-                    >
+                        }}>
                         官小二
                     </Typography>
 
@@ -122,8 +103,7 @@ const Header = () => {
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
                             onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
+                            color="inherit">
                             <MenuIcon />
                         </IconButton>
                         <Menu
@@ -142,16 +122,14 @@ const Header = () => {
                             onClose={handleCloseNavMenu}
                             sx={{
                                 display: { xs: "block", md: "none" },
-                            }}
-                        >
-                            {pages.map((page) => (
+                            }}>
+                            {pages.map(page => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography
                                         component={RouterLink}
                                         sx={{ color: "inherit", textDecoration: "none" }}
                                         to={`${page === "Home" ? "/" : `/${page}`}`}
-                                        textAlign="center"
-                                    >
+                                        textAlign="center">
                                         {page}
                                     </Typography>
                                 </MenuItem>
@@ -165,12 +143,11 @@ const Header = () => {
                             display: { xs: "flex", md: "none" },
                             width: "100%",
                             justifyContent: "center",
-                        }}
-                    >
+                        }}>
                         <img className="nav-logo" src={Logo} alt="Porousway Logo" width="40" height="40" />
                     </Link>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex", justifyContent: "flex-end" } }}>
-                        {pages.map((page) => (
+                        {pages.map(page => (
                             <Button
                                 component={RouterLink}
                                 to={`${page === "Home" ? "/" : `/${page}`}`}
@@ -180,7 +157,6 @@ const Header = () => {
                                     my: 2,
                                     color: "#323232",
                                     display: "block",
-                                    position: "relative",
                                     ":hover": {
                                         backgroundColor: "unset",
                                     },
@@ -201,8 +177,7 @@ const Header = () => {
                                         transformOrigin: "left",
                                         transform: "scaleX(1)",
                                     },
-                                }}
-                            >
+                                }}>
                                 {page}
                             </Button>
                         ))}
@@ -216,8 +191,7 @@ const Header = () => {
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
                                 onClick={handleOpenUserMenu}
-                                color="inherit"
-                            >
+                                color="inherit">
                                 <AccountCircleIcon />
                             </IconButton>
                         </Tooltip>
@@ -235,24 +209,36 @@ const Header = () => {
                                 horizontal: "right",
                             }}
                             open={Boolean(anchorElUser)}
-                            onClose={() => setAnchorElUser(null)}
-                        >
-                            {userMenuRoutes.map((route) => (
+                            onClose={handleCloseUserMenu}>
+                            {userState.profile.login ? (
+                                settings.map((setting, index) => (
+                                    <MenuItem
+                                        component={RouterLink}
+                                        to={`${
+                                            setting === menuRoutes[index]?.query ? `${menuRoutes[index]?.path}` : `/`
+                                        }`}
+                                        key={setting}
+                                        onClick={setting => {
+                                            handleCloseUserMenu(setting)
+                                        }}>
+                                        <Typography textAlign="center">{setting}</Typography>
+                                    </MenuItem>
+                                ))
+                            ) : (
                                 <MenuItem
                                     component={RouterLink}
-                                    to={route.path}
-                                    key={route.query}
-                                    onClick={() => handleCloseUserMenu(route.query)}
-                                >
-                                    <Typography textAlign="center">{route.query}</Typography>
+                                    to="/login"
+                                    onClick={setting => {
+                                        handleCloseUserMenu(setting)
+                                    }}>
+                                    <Typography textAlign="center">登入</Typography>
                                 </MenuItem>
-                            ))}
+                            )}
                         </Menu>
                     </Box>
                 </Toolbar>
             </Container>
         </AppBar>
-    );
-};
-
-export default Header;
+    )
+}
+export default Header

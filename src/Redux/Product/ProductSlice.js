@@ -85,8 +85,43 @@ export const productSlice = createSlice({
             state.productLoading = false
         },
 
+        setProductDataToFirestore(state, action) {
+            state.productLoading = true
+        },
+
+        setProductDataToFirestoreSuccess(state, action) {
+            state.productLoading = false
+        },
+
+        setProductDataToFirestoreFailure(state, action) {
+            state.productLoading = false
+        },
+
+        setUpdateSelectedProductToFirestore(state, action) {
+            state.productLoading = true
+        },
+
+        setUpdateSelectedProductToFirestoreSuccess(state, action) {
+            state.productLoading = false
+        },
+
+        setUpdateSelectedProductToFirestoreFailure(state, action) {
+            state.productLoading = false
+        },
+
+        setRemoveProductDataFromFirestore(state, action) {
+            state.productLoading = true
+        },
+
+        setRemoveProductDataFromFirestoreSuccess(state, action) {
+            state.productLoading = false
+        },
+
+        setRemoveProductDataFromFirestoreFailure(state, action) {
+            state.productLoading = false
+        },
+
         setOrderList: (state, action) => {
-            console.log(action.payload, "setOrderList action.payload")
             const { productId } = action.payload
             const selectedItemIndex = state.orderList.findIndex(item => item.productId === productId)
             if (selectedItemIndex === -1) {
@@ -122,8 +157,4 @@ export const productSlice = createSlice({
     },
 })
 
-// Action creators are generated for each case reducer function
-// export const { setProductsData, setOrderList, setIncrement, setDecrement, setRemove } = productSlice.actions
-
-// export default productSlice.reducer
 export default productSlice

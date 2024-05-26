@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
-import { Link as RouteLink, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { Link as RouteLink } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 import CheckIcon from "@mui/icons-material/Check"
@@ -19,18 +19,18 @@ import {
     Snackbar,
 } from "@mui/material"
 import userSlice from "../../Redux/User/UserSlice"
-import { handleLoginWithGoogle, handleLoginOrRegister } from "../../Utils/firebase"
+// import { loginRequest } from "../../Utils/firebase"
 import GoogleIcon from "../../Assets/Images/google-icon.svg"
 import Logo from "../../Assets/Images/logo-2.png"
 
-const { setLogin } = userSlice.actions
+const { loginRequest, logoutRequest, loginWithGoogle } = userSlice.actions
 
 const theme = createTheme()
 
 const Login = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const [isShowLoginDialog, setIsShowLoginDialog] = useState(false)
+    const userLoading = useSelector((state) => state.user.userLoading)
+
 
     const validationRules = {
         email: {
@@ -63,31 +63,7 @@ const Login = () => {
 
     const onSubmit = async data => {
         const { email, password } = data
-        await handleLoginOrRegister(email, password).then(res => {
-            setUserInfoToRedux(res)
-            setIsShowLoginDialog(true)
-            redirectToHome()
-        })
-    }
-
-    const setUserInfoToRedux = data => {
-        const {
-            user: { email, uid },
-        } = data
-
-        dispatch(
-            setLogin({
-                uid: uid,
-                email: email,
-                login: true,
-            })
-        )
-    }
-
-    const redirectToHome = () => {
-        setTimeout(() => {
-            navigate("/")
-        }, 2000)
+        dispatch(loginRequest({email, password}))
     }
 
     return (
@@ -115,14 +91,6 @@ const Login = () => {
                     <Typography component="h1" variant="h5">
                         註冊/登入
                     </Typography>
-                    <Snackbar
-                        open={isShowLoginDialog}
-                        autoHideDuration={2000}
-                        sx={{ position: "inherit", marginTop: "10px" }}>
-                        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-                            登入/註冊成功!
-                        </Alert>
-                    </Snackbar>
                     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
                         <TextField
                             required
@@ -178,26 +146,23 @@ const Login = () => {
                         <Button type="submit" fullWidth variant="contained">
                             註冊 / 登入
                         </Button>
-                        <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
+                        <Button
                             sx={{
+                                width: '100%',
                                 border: "1px solid rgba(0, 0, 0, 0.15)",
                                 borderRadius: "4px",
                                 padding: "5px 0",
                                 marginTop: "16px",
                                 marginBottom: "8px",
-                            }}>
-                            <Box component="img" src={GoogleIcon} alt="Google" sx={{ width: "18px", height: "18px" }} />
-                            <Button
-                                sx={{ color: "black" }}
-                                onClick={() => {
-                                    handleLoginWithGoogle()
-                                }}>
-                                Google 註冊 / 登入
-                            </Button>
-                        </Box>
+                                color: "black"
+                            }}
+                            onClick={() => {
+                                dispatch(loginWithGoogle())
+                            }}
+                        >
+                            <Box component="img" src={GoogleIcon} alt="Google" sx={{ width: "18px", height: "15px", marginRight: '8px' }} />
+                            Google 註冊 / 登入
+                        </Button>
                         <Grid container>
                             <Grid item xs>
                                 <Typography

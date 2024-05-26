@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import { compose } from 'redux'
 import { useDispatch, useSelector } from "react-redux"
 import productSlice from "./Redux/Product/ProductSlice"
@@ -19,6 +19,7 @@ import RemoveProduct from "./Components/Dashboard/RemoveProduct"
 import EditProduct from "./Components/Dashboard/EditProduct"
 import WithConfigProvider from './Components/App/withConfigProvider'
 import withRedux from './Components/App/withRedux'
+import { setNavigate } from './Utils/UtilityJS'
 
 const {
     getProductsData,
@@ -37,55 +38,16 @@ const SkeletonLoader = () => (
 
 function App() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const productsData = useSelector(state => state.products.productsData)
 
     useEffect(() => {
         dispatch(getProductsData())
-
     }, [])
 
-    // useEffect(() => {
-    //     const initialProductList = async () => {
-    //         const productsData = await getProductListFromFirestore()
-
-    //         const imagesData = await getProductImagesFromStorage()
-    //         const subImagesData = await getSubImagesFromStorage()
-    //         console.log("🚀 - subImagesData:", subImagesData)
-    //         const tempData = await Promise.all(
-    //             productsData.map(async product => {
-    //                 let data = []
-    //                 const tabsImagesData = await getTabImagesFromStorage(product.title)
-    //                 console.log("🚀 - tabsImagesData:", tabsImagesData)
-    //                 product = {
-    //                     ...product,
-    //                     tabsImagesData,
-    //                 }
-    //                 data.push(product)
-    //                 return data
-    //             })
-    //         )
-    //         const newProductsData = tempData.flatMap(item => item)
-
-    //         newProductsData.forEach(product => {
-    //             const selectedImageIndex = imagesData.findIndex(image => decodeURIComponent(image).includes(product.title))
-    //             const selectedSubImageIndex = subImagesData.findIndex(image =>
-    //                 decodeURIComponent(image).includes(product.title)
-    //             )
-    //             let tempData = []
-    //             if (selectedImageIndex !== -1) {
-    //                 product.mainImg = imagesData[selectedImageIndex]
-    //             }
-    //             if (selectedSubImageIndex !== -1) {
-    //                 tempData = [...tempData, subImagesData[selectedSubImageIndex]]
-    //                 product.subImgList = tempData
-    //             }
-    //         })
-    
-    //         dispatch(setProductsData(newProductsData))
-    //     }
-    //     initialProductList()
-    // }, [])
-
+    useEffect(() => {
+        setNavigate(navigate)
+    }, [navigate])
 
     return (
         <>

@@ -58,7 +58,7 @@ const Footer = () => {
                             display: "flex",
                             justifyContent: "center",
                         }}>
-                        <ContactLink href="mailto:free19980515@qq.com" underline="none" title="guanyyds">
+                        <ContactLink href="/" underline="none" title="guanyyds">
                             <img src={MailIcon} alt="" width="24" height="24" />
                             <Typography
                                 component="span"
@@ -76,7 +76,7 @@ const Footer = () => {
                         </ContactLink>
                         <ContactLink
                             color={"#0064e0"}
-                            href="https://www.facebook.com/guanyyds?mibextid=ZbWKwL"
+                            href="/"
                             underline="none"
                             title="guanyyds">
                             <FacebookIcon />
@@ -94,7 +94,7 @@ const Footer = () => {
                                 Facebook 粉絲專頁
                             </Typography>
                         </ContactLink>
-                        <ContactLink href="https://www.instagram.com/guanyyds/" underline="none" title="guanyyds">
+                        <ContactLink href="/" underline="none" title="guanyyds">
                             <img src={InstagramIcon} alt="" width="24" height="24" />
                             <Typography
                                 component="span"

@@ -14,7 +14,10 @@ import {
     Table,
 } from "@mui/material"
 import { Delete as DeleteIcon, Remove as RemoveIcon, Add as AddIcon } from "@mui/icons-material"
-import { setIncrement, setDecrement, setRemove } from "../../Redux/Store/productSlice"
+import productSlice from "../../Redux/Product/ProductSlice"
+
+const { setIncrement, setDecrement, setRemove } = productSlice.actions
+
 
 function priceRow(qty, unit) {
     return qty * unit

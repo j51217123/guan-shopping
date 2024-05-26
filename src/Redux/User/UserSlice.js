@@ -35,6 +35,28 @@ const userSlice = createSlice({
             state.userLoading = false
             state.error = action.payload
         },
+        createUserRequest(state, action) {
+            state.userLoading = true
+        },
+        createUserSuccess(state, action) {
+            state.profile = action.payload
+            state.userLoading = false
+            state.isLogin = true
+        },
+        createUserFailure(state, action) {
+            state.userLoading = false
+            state.error = action.payload
+        },
+        checkAdmin(state, action) {
+            state.userLoading = true
+        },
+        checkAdminSuccess(state, action) {
+            state.userLoading = false
+        },
+        checkAdminFailure(state, action) {
+            state.userLoading = false
+            state.error = action.payload
+        },
         loginWithGoogle(state, action) {
             state.userLoading = true
         },

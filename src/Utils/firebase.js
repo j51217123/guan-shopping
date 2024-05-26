@@ -17,7 +17,7 @@ const storage = getStorage()
 const app = initializeApp(firebaseConfig)
 
 const setUpdateSelectedProductToFirestore = async (
-    { title, productId, originalPrice, discountPrice, desc, tabDesc, deliveryDesc, stock, quantity, imageFileName },
+    { title, productId, originalPrice, discountPrice, desc, tabDesc, deliveryDesc, stock, quantity, imageFileName, mainImg },
     callBack
 ) => {
     try {
@@ -32,6 +32,7 @@ const setUpdateSelectedProductToFirestore = async (
             stock,
             quantity,
             imageFileName,
+            mainImg
         })
         callBack && callBack()
     } catch (err) {
@@ -58,7 +59,6 @@ const setRemoveProductTabImageFromStorage = async productTitle => {
 }
 
 const setRemoveProductImageFromStorage = async imageFileName => {
-    console.log("🚀 - imageFileName", imageFileName)
     const imageRef = ref(storage, `Images/products/${imageFileName}`)
 
     try {
@@ -68,8 +68,15 @@ const setRemoveProductImageFromStorage = async imageFileName => {
     }
 }
 
-const setRemoveProductDataFromFirestore = async (productName, callBack) => {
+const setRemoveProductDataFromFirestore = async (
+    {
+        productName,
+        imageFileName
+    },
+    callBack
+) => {
     try {
+        await setRemoveProductImageFromStorage(imageFileName)
         await deleteDoc(doc(db, "products", productName))
         callBack && callBack()
     } catch (err) {
@@ -79,6 +86,12 @@ const setRemoveProductDataFromFirestore = async (productName, callBack) => {
 
 const setProductDataToFirestore = async (
     {
+        uploadProductInfo,
+        imageFile
+    },
+    callBack
+) => {
+    const {
         productName,
         title,
         productId,
@@ -90,10 +103,11 @@ const setProductDataToFirestore = async (
         stock,
         quantity,
         imageFileName,
-    },
-    callBack
-) => {
+        mainImg
+    } = uploadProductInfo
+
     try {
+        await setProductImageToStorage(imageFile)
         await setDoc(doc(db, "products", productName), {
             title,
             productId,
@@ -105,6 +119,7 @@ const setProductDataToFirestore = async (
             stock,
             quantity,
             imageFileName,
+            mainImg
         })
         callBack && callBack()
     } catch (err) {
@@ -125,58 +140,75 @@ const setProductImageToStorage = async imageFile => {
     }
 }
 
-const setUploadProductImageToStorage = async (imageFile, productTitle) => {
-    console.log("🚀 - imageFile:", imageFile)
-    const folderRef = ref(storage, `Images/products/${productTitle}`)
+// const setUploadProductImageToStorage = async (imageFile, productTitle) => {
+//     console.log("🚀 - imageFile:", imageFile)
+//     const folderRef = ref(storage, `Images/products/${productTitle}`)
+//     const imageRef = ref(storage, `Images/products/${imageFile.name}`)
+//     const removeRef = ref(storage, `Images/products/`)
+//     if (Object.keys(imageFile).length !== 0) {
+//         const storageItemList = await listAll(folderRef)
+//         try {
+//             await Promise.all(
+//                 storageItemList?.items?.map(async item => {
+//                     try {
+//                         if (item.name.split(".")[0].includes(productTitle)) {
+//                             await deleteObject(item)
+//                             console.log("Image deleted successfully")
+//                         }
+//                     } catch (error) {
+//                         console.error("Error: ", error)
+//                     }
+//                 })
+//             )
+//         } catch (err) {
+//             console.error("Error: ", err)
+//         }
+//     }
+
+//     try {
+//         const removeItemList = await listAll(removeRef)
+
+//         await Promise.all(
+//             removeItemList.items.map(async item => {
+//                 try {
+//                     if (item.name.split(".")[0].includes(productTitle)) {
+//                         await deleteObject(item)
+//                         console.log("Image deleted successfully")
+//                     }
+//                 } catch (error) {
+//                     console.error("Error: ", error)
+//                 }
+//             })
+//         )
+//     } catch (error) {
+//         console.error("Error: ", error)
+//     }
+
+//     try {
+//         await Promise.all(
+//             await uploadBytes(imageRef, imageFile).then(snapshot => {
+//                 console.log("Uploaded a blob or file!")
+//             })
+//         )
+//     } catch (error) {
+//         console.error("Error: ", error)
+//     }
+// }
+
+const setUploadProductImageToStorage = async (imageFile, productTitle, fileLength) => {
     const imageRef = ref(storage, `Images/products/${imageFile.name}`)
-    const removeRef = ref(storage, `Images/products/`)
-    if (Object.keys(imageFile).length !== 0) {
-        const storageItemList = await listAll(folderRef)
-        try {
-            await Promise.all(
-                storageItemList?.items?.map(async item => {
-                    try {
-                        if (item.name.split(".")[0].includes(productTitle)) {
-                            await deleteObject(item)
-                            console.log("Image deleted successfully")
-                        }
-                    } catch (error) {
-                        console.error("Error: ", error)
-                    }
-                })
-            )
-        } catch (err) {
-            console.error("Error: ", err)
+
+    try {
+        if(fileLength > 0) {
+            await uploadBytes(imageRef, imageFile)
+            console.log("Uploaded a blob or file!")
+            const downloadURL = await getDownloadURL(imageRef)
+            const productDocRef = doc(db, "products", productTitle)
+            await updateDoc(productDocRef, { mainImg: downloadURL })
+            console.log("Database updated with new image reference")
         }
-    }
-
-    try {
-        const removeItemList = await listAll(removeRef)
-
-        await Promise.all(
-            removeItemList.items.map(async item => {
-                try {
-                    if (item.name.split(".")[0].includes(productTitle)) {
-                        await deleteObject(item)
-                        console.log("Image deleted successfully")
-                    }
-                } catch (error) {
-                    console.error("Error: ", error)
-                }
-            })
-        )
     } catch (error) {
-        console.error("Error: ", error)
-    }
-
-    try {
-        await Promise.all(
-            await uploadBytes(imageRef, imageFile).then(snapshot => {
-                console.log("Uploaded a blob or file!")
-            })
-        )
-    } catch (error) {
-        console.error("Error: ", error)
+        console.error("Error uploading file or updating database:", error)
     }
 }
 
@@ -326,21 +358,21 @@ const handleRegisterWithEmailAndPassWord = async (auth, email, password) => {
     }
 }
 
-const handleLoginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider()
-    const auth = getAuth()
-    signInWithPopup(auth, provider)
-        .then(async result => {
-            const credential = GoogleAuthProvider.credentialFromResult(result)
-            const token = credential.accessToken
-            const user = result.user
-            console.log("GoogleResult:", result)
-            // 在這邊把user資料寫入locaStorage或是進行後端寫入資料庫等等的操作
-        })
-        .catch(error => {
-            console.log(error)
-        })
-}
+// const loginWithGoogle = async () => {
+//     const provider = new GoogleAuthProvider()
+//     const auth = getAuth()
+//     signInWithPopup(auth, provider)
+//         .then(async result => {
+//             const credential = GoogleAuthProvider.credentialFromResult(result)
+//             const token = credential.accessToken
+//             const user = result.user
+//             console.log("GoogleResult:", result)
+//             // 在這邊把user資料寫入locaStorage或是進行後端寫入資料庫等等的操作
+//         })
+//         .catch(error => {
+//             console.log(error)
+//         })
+// }
 
 export {
     setUpdateSelectedProductToFirestore,
@@ -355,7 +387,7 @@ export {
     getTabImagesFromStorage,
     getSubImagesFromStorage,
     getProductImagesFromStorage,
-    handleLoginWithGoogle,
+    // loginWithGoogle,
     handleLoginOrRegister,
     handleRegisterWithEmailAndPassWord,
     ResetPassword,

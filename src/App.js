@@ -47,6 +47,7 @@ function App() {
                         element={
                             <Container
                                 component="section"
+                                maxWidth="lg"
                                 sx={{
                                     width: {
                                         xs: '100%', // 小屏幕

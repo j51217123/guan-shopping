@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
-import { Button, ImageListItem, ImageList, Typography, Box, Container } from "@mui/material"
+import { Button, ImageListItem, ImageList, Typography, Box, Container, Skeleton } from "@mui/material"
 import TabPanel from "../TabPanel/TabPanel"
 import productSlice from "../../Redux/Product/ProductSlice"
 import "./ProductDetail.css"
@@ -27,6 +27,7 @@ const ProductDetail = ({
     const dispatch = useDispatch()
     const [itemQuantity, setItemQuantity] = useState(quantity)
     const [mainImage, setMainImage] = useState(mainImg)
+    const productLoading = useSelector(state => state.products.productLoading)
 
     const handleIncrement = () => {
         setItemQuantity(itemQuantity + 1)
@@ -76,15 +77,21 @@ const ProductDetail = ({
                     gap: "10px",
                 }}>
                 <Box>
-                    <Box
-                        component="img"
-                        src={mainImage}
-                        alt=""
-                        loading="lazy"
-                        width="300px"
-                        height="300px"
-                        sx={{ objectFit: "contain" }}
-                    />
+                    {
+                        productLoading
+                            ? <Skeleton variant="rectangular" width="300px" height="300px" />
+                            : (
+                                <Box
+                                    component="img"
+                                    src={mainImage}
+                                    alt=""
+                                    loading="lazy"
+                                    width="300px"
+                                    height="300px"
+                                    sx={{ objectFit: "contain" }}
+                                />
+                            )
+                    }
                     <ImageList sx={{ width: 290, overflowY: "unset", margin: 1 }} cols={4} rowHeight={60}>
                         {subImgList?.map((image, index) => {
                             return (

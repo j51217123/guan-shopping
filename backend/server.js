@@ -23,8 +23,13 @@ admin.initializeApp({
     databaseURL: "https://guan-shopping-bf7df-default-rtdb.firebaseio.com",
 })
 
+const corsOptions = {
+    origin: ["http://localhost:3000", "https://guan-shopping-bf7df.web.app"],
+    optionsSuccessStatus: 200,
+}
+
 const app = express()
-app.use(cors())
+app.use(cors(corsOptions ))
 app.use(bodyParser.json())
 
 app.post("/api/createUserWithAdminRole", async (req, res) => {

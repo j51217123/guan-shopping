@@ -9,32 +9,26 @@ import ScopedCssBaseline from "@mui/material/ScopedCssBaseline"
 import App from "./App"
 import "./index.css"
 import reportWebVitals from "./reportWebVitals"
+import { Container } from "@mui/material"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
-// const store = configureStore({
-//     reducer: {
-//         user: userSlice,
-//         products: productSlice,
-//     },
-// })
-
 root.render(
     // <React.StrictMode>
-        <BrowserRouter>
+    <BrowserRouter>
             <Routes>
                 <Route
                     path="/*"
                     element={
                         // <Provider store={store}>
-                            <ScopedCssBaseline>
-                                <App />
-                            </ScopedCssBaseline>
+                        <ScopedCssBaseline>
+                            <App />
+                        </ScopedCssBaseline>
                         // </Provider>
                     }
                 />
             </Routes>
-        </BrowserRouter>
+    </BrowserRouter>
     // </React.StrictMode>
 )
 

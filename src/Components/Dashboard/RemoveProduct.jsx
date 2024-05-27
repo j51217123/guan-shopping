@@ -112,9 +112,15 @@ const RemoveProduct = () => {
                             </>
                         )
                 }
-            <Button variant="contained" onClick={handleRemove} disabled={product === ""} loading={productLoading}>
-                刪除商品
-            </Button>
+                {
+                    productLoading
+                        ? null
+                        : (
+                            <Button variant="contained" onClick={handleRemove} disabled={product === ""} loading={productLoading}>
+                                刪除商品
+                            </Button>
+                        )
+                }
         </Box>
     )
 }

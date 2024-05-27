@@ -1,15 +1,16 @@
-import React, { useState } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { useDispatch } from "react-redux"
 import CssBaseline from "@mui/material/CssBaseline"
-import { Alert, Button, Snackbar, Box, Typography, TextField, Container } from "@mui/material"
-import { ResetPassword } from "../../../Utils/firebase"
+import { Button, Box, Typography, TextField, Container } from "@mui/material"
+import userSlice from "../../../Redux/User/UserSlice"
 
+const { resetPassword } = userSlice.actions
 const theme = createTheme()
 
 const ForgotPassword = () => {
-    const [isShowLoginDialog, setIsShowLoginDialog] = useState(false)
-    const [isSendEmailSuccess, setIsSendEmailSuccess] = useState(false)
+    const dispatch = useDispatch()
 
     const validationRules = {
         email: {
@@ -30,21 +31,7 @@ const ForgotPassword = () => {
 
     const handleResetPassword = async data => {
         const { email } = data
-        console.log("🚀 - file: ForgotPassword.tsx:8 - handleResetPassword - email", email)
-        const result = await ResetPassword(email)
-
-        if (result === "Firebase: Error (auth/user-not-found).") {
-            setIsShowLoginDialog(true)
-            setIsSendEmailSuccess(false)
-        } else {
-            console.log("result: ", result)
-            setIsShowLoginDialog(true)
-            setIsSendEmailSuccess(true)
-        }
-    }
-
-    const handleClose = () => {
-        setIsShowLoginDialog(false)
+        dispatch(resetPassword(email))
     }
 
     return (
@@ -74,15 +61,6 @@ const ForgotPassword = () => {
                     <Typography component="h1" variant="h5">
                         忘記密碼
                     </Typography>
-                    <Snackbar
-                        open={isShowLoginDialog}
-                        onClose={handleClose}
-                        autoHideDuration={2000}
-                        sx={{ position: "inherit", marginTop: "10px" }}>
-                        <Alert sx={{ fontWeight: "bold" }} severity={isSendEmailSuccess ? "success" : "error"}>
-                            {isSendEmailSuccess ? "認證信件發送成功 !" : "認證信件發送失敗 !"}
-                        </Alert>
-                    </Snackbar>
                     <Box noValidate sx={{ mt: 1 }}>
                         <TextField
                             required

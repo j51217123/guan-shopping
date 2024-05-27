@@ -14,20 +14,31 @@ export const productSlice = createSlice({
     initialState,
     reducers: {
         setProductsData: (state, action) => {
-            state.productsData.forEach(product => {
-                const selectedImageIndex = state.imagesData.findIndex(image =>
-                    decodeURIComponent(image).includes(product.title)
-                )
-                const selectedSubImageIndex = state.subImagesData.findIndex(image =>
-                    decodeURIComponent(image).includes(product.title)
-                )
-                let tempData = []
-                if (selectedImageIndex !== -1) {
-                    product.mainImg = state.imagesData[selectedImageIndex]
+            const imageMap = new Map()
+            const subImageMap = new Map()
+
+            state.imagesData.forEach((image, index) => {
+                const title = decodeURIComponent(image).match(/title-regex/)[0] // 假设用正则表达式提取标题
+                imageMap.set(title, state.imagesData[index])
+            })
+
+            state.subImagesData.forEach((image, index) => {
+                const title = decodeURIComponent(image).match(/title-regex/)[0] // 假设用正则表达式提取标题
+                if (!subImageMap.has(title)) {
+                    subImageMap.set(title, [])
                 }
-                if (selectedSubImageIndex !== -1) {
-                    tempData = [...tempData, state.subImagesData[selectedSubImageIndex]]
-                    product.subImgList = tempData
+                subImageMap.get(title).push(state.subImagesData[index])
+            })
+
+            state.productsData.forEach(product => {
+                const mainImg = imageMap.get(product.title)
+                if (mainImg) {
+                    product.mainImg = mainImg
+                }
+
+                const subImgList = subImageMap.get(product.title)
+                if (subImgList) {
+                    product.subImgList = subImgList
                 }
             })
         },
@@ -37,8 +48,11 @@ export const productSlice = createSlice({
         },
 
         getProductsDataSuccess(state, action) {
-            state.productLoading = false
             state.productsData = action.payload
+        },
+
+        setDelayLoading(state, action) {
+            state.productLoading = false
         },
 
         getProductsDataFailure(state, action) {

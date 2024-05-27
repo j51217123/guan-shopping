@@ -1,5 +1,4 @@
 import { all, call, delay, put, select, takeEvery } from "redux-saga/effects"
-import axios from "axios"
 import { createUserApi, checkAdminApi } from "../../Api/Api"
 import {
     getAuth,
@@ -9,12 +8,14 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     getIdTokenResult,
+    sendPasswordResetEmail,
 } from "firebase/auth"
 import userSlice from "../User/UserSlice"
 import { navigate } from "../../Utils/UtilityJS"
 import showAlert from "../../Components/Alert/Alert"
 
 const {
+    setIsMember,
     checkAdmin,
     loginSuccess,
     loginFailure,
@@ -26,19 +27,15 @@ const {
     createUserFailure,
     checkAdminSuccess,
     checkAdminFailure,
+    resetPasswordSuccess,
+    resetPasswordFailure,
 } = userSlice.actions
 
 export function* createUserSaga(action) {
     const { email, password } = action.payload
-    // // API call to create user
-    // const createUserApi = async (email, password) => {
-    //     const response = await axios.post("http://localhost:5000/api/createUserWithAdminRole", { email, password })
-    //     return response.data
-    // }
 
     try {
         const data = yield call(createUserApi, email, password)
-        console.log("🚀 - data:", data)
         if (data.success) {
             yield put(createUserSuccess(data.uid))
             yield put(checkAdmin(data.uid))
@@ -56,30 +53,28 @@ export function* createUserSaga(action) {
                     "user",
                     JSON.stringify({ email: registerResult.user.email, uid: registerResult.user.uid, isLogin: true })
                 )
+                localStorage.setItem("isMember", true)
+                yield put({ type: setIsMember.type, payload: true })
                 yield put(loginSuccess(registerResult.user))
-                // navigate("/")
+                navigate("/")
             } catch (registerError) {
                 yield put(createUserFailure(error.message))
             }
         } else {
             yield put(createUserFailure(error.message))
+            yield call(showAlert, "帳戶登入失敗", "error")
         }
     }
 }
 
 export function* checkAdminSaga(action) {
-    // API call to check admin claim
-    // const checkAdminApi = async uid => {
-    //     const response = await axios.get(`http://localhost:5000/api/checkAdminClaim/${uid}`)
-    //     return response.data
-    // }
     try {
         const uid = action.payload
-        console.log("🚀 - uid:", uid)
         const data = yield call(checkAdminApi, uid)
-        console.log("🚀 - data:", data)
-        if (data.isAdmin) {
-            yield put(checkAdminSuccess(data.isAdmin))
+        if (data.isMember) {
+            yield put(checkAdminSuccess(data.isMember))
+            yield put({ type: setIsMember.type, payload: true })
+            navigate("/")
         } else {
             yield put(checkAdminFailure(new Error("User is not an admin")))
         }
@@ -97,9 +92,13 @@ export function* loginWithGoogleSaga() {
         const token = credential.accessToken
         const user = result.user
         yield put(loginSuccess(user))
+        localStorage.setItem("user", JSON.stringify({ email: result.user.email, uid: result.user.uid, isLogin: true }))
+        localStorage.setItem("isMember", true)
         navigate("/")
+        yield put({ type: setIsMember.type, payload: true })
     } catch (error) {
         yield put(loginFailure(error.message))
+        yield call(showAlert, "帳戶登入失敗", "error")
     }
 }
 
@@ -107,13 +106,13 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
     const auth = getAuth()
     try {
         const result = yield call(signInWithEmailAndPassword, auth, email, password)
-        console.log("🚀 - result:", result)
         yield call(showAlert, "帳戶登入成功", "success")
         const idTokenResult = yield call(getIdTokenResult, result.user)
-        console.log("🚀 - idTokenResult:", idTokenResult)
         localStorage.setItem("user", JSON.stringify({ email: result.user.email, uid: result.user.uid, isLogin: true }))
+        localStorage.setItem("isMember", true)
         yield put(loginSuccess(result.user))
         navigate("/")
+        yield put({ type: setIsMember.type, payload: true })
     } catch (error) {
         if (error.message === "Firebase: Error (auth/invalid-login-credentials).") {
             try {
@@ -123,13 +122,16 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
                     "user",
                     JSON.stringify({ email: registerResult.user.email, uid: registerResult.user.uid, isLogin: true })
                 )
+                localStorage.setItem("isMember", true)
                 yield put(loginSuccess(registerResult.user))
                 navigate("/")
+                yield put({ type: setIsMember.type, payload: true })
             } catch (registerError) {
                 yield put(loginFailure(registerError.message))
             }
         } else {
             yield put(loginFailure(error.message))
+            yield call(showAlert, "帳戶登入失敗", "error")
         }
     }
 }
@@ -139,10 +141,24 @@ export function* logoutAuthSaga() {
     try {
         const result = yield call(signOut, auth)
         yield call(showAlert, "帳戶登出成功", "success")
-        localStorage.setItem("user", JSON.stringify({}))
+        localStorage.removeItem("user")
+        localStorage.removeItem("isMember")
         yield put(logoutSuccess())
         navigate("/")
+        yield put({ type: setIsMember.type, payload: false })
     } catch (error) {
         yield put(logoutFailure(error.message))
+    }
+}
+
+export function* resetPasswordSaga({ payload: email }) {
+    const auth = getAuth()
+    try {
+        const result = yield call(sendPasswordResetEmail, auth, email)
+        yield put(resetPasswordSuccess(result))
+        yield call(showAlert, "認證信件發送成功", "success")
+    } catch (error) {
+        yield put(resetPasswordFailure(error.message))
+        yield call(showAlert, "認證信件發送失敗", "error")
     }
 }

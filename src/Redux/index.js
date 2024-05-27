@@ -30,7 +30,7 @@ export function* rootSaga() {
         takeEvery(userAction.logoutRequest.type, userSaga.logoutAuthSaga),
         takeEvery(userAction.createUserRequest.type, userSaga.createUserSaga),
         takeEvery(userAction.checkAdmin.type, userSaga.checkAdminSaga),
-        
+        takeEvery(userAction.resetPassword.type, userSaga.resetPasswordSaga),
     ])
 }
 

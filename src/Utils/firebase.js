@@ -107,7 +107,6 @@ const setProductDataToFirestore = async (
     } = uploadProductInfo
 
     try {
-        await setProductImageToStorage(imageFile)
         await setDoc(doc(db, "products", productName), {
             title,
             productId,
@@ -121,20 +120,24 @@ const setProductDataToFirestore = async (
             imageFileName,
             mainImg
         })
+        await setProductImageToStorage(imageFile, productName)
         callBack && callBack()
     } catch (err) {
         console.error("Error: ", err)
     }
 }
 
-const setProductImageToStorage = async imageFile => {
+const setProductImageToStorage = async (imageFile, productName) => {
     const imageRef = ref(storage, `Images/products/${imageFile.name}`)
     try {
-        await uploadBytes(imageRef, imageFile).then(snapshot => {
-            console.log("🚀 - imageRef", imageRef)
-            console.log("🚀 - snapshot", snapshot)
-            console.log("Uploaded a blob or file!")
-        })
+        await uploadBytes(imageRef, imageFile)
+        console.log("Uploaded a blob or file!")
+        const downloadURL = await getDownloadURL(imageRef);
+        console.log('File available at', downloadURL);
+        const productDocRef = doc(db, "products", productName)
+        console.log("🚀 - productDocRef:", productDocRef)
+        await updateDoc(productDocRef, { mainImg: downloadURL })
+        console.log("Database updated with new image reference")
     } catch (err) {
         console.error("Error: ", err)
     }

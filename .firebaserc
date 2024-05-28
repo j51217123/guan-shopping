@@ -1,7 +1,8 @@
 {
   "projects": {
-    "default": "guan-shopping-bf7df",
-    "guan-shopping": "guan-shopping-bf7df"
+    "default": "guan-shopping-web",
+    "guan-shopping": "guan-shopping-bf7df",
+    "staging": "guan-shopping-web"
   },
   "targets": {},
   "etags": {},

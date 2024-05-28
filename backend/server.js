@@ -26,8 +26,8 @@ admin.initializeApp({
 const corsOptions = {
     origin: [
         "http://localhost:3000",
-        "https://guan-shopping-bf7df.firebaseapp.com",
-        "https://guan-shopping-bf7df.web.app/",
+        "https://guan-shopping-web.firebaseapp.com",
+        "https://guan-shopping-web.web.app/",
     ],
     optionsSuccessStatus: 200,
 }

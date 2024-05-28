@@ -63,9 +63,8 @@ const Login = () => {
 
     const onSubmit = async data => {
         const { email, password } = data
-        // dispatch(loginRequest({email, password}))
-        dispatch(createUserRequest({email, password}))
-        dispatch(checkAdmin('WIxhtjD0fxWxixDKdHKKorQVDrx2'))
+        dispatch(loginRequest({email, password}))
+        // dispatch(createUserRequest({email, password}))
     }
 
     return (

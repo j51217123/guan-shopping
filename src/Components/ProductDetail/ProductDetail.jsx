@@ -5,6 +5,7 @@ import { Button, ImageListItem, ImageList, Typography, Box, Container, Skeleton 
 import TabPanel from "../TabPanel/TabPanel"
 import productSlice from "../../Redux/Product/ProductSlice"
 import "./ProductDetail.css"
+import axios from "axios"
 
 const { setOrderList } = productSlice.actions
 
@@ -57,6 +58,55 @@ const ProductDetail = ({
         setMainImage(mainImg)
     }
 
+    async function handlePayment() {
+        try {
+            // 綠界支付參數
+            const ECPAY_PARAMS = {
+                MerchantID: "3002607",
+                MerchantTradeNO: "ecpay20240101000000",
+                MerchantTradeDate: "2024/01/01 00:00:00",
+                PaymentType: "aio",
+                TotalAmount: "100",
+                TradeDesc: "testtrade",
+                ItemName: "testitem",
+                ReturnURL: " https://697b-211-75-237-68.ngrok-free.app",
+                ChoosePayment: "ALL",
+                EncryptType: "1",
+                CheckMacValue: "D4CE5F6B5EAC4F125FBF8A99AACA283CCDB14B09509CFFB6A663B78FCEF8C3AD",
+            }
+            const response = await fetch("https://697b-211-75-237-68.ngrok-free.app/create_payment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    MerchantTradeNo: ECPAY_PARAMS.MerchantTradeNo,
+                    MerchantTradeDate: ECPAY_PARAMS.MerchantTradeDate,
+                    TotalAmount: "100",
+                    TradeDesc: "testtrade",
+                    ItemName: "testitem",
+                }),
+            })
+            // 先打印响应文本
+            const text = await response.text()
+            console.log(text)
+
+            // 解析 JSON
+            const data = JSON.parse(text)
+            console.log(data)
+
+            // 根据返回的结果进行处理，例如重定向到支付页面
+            if (data.RtnCode === 1) {
+                window.location.href = data.PaymentURL
+            } else {
+                alert("Payment failed: " + data.RtnMsg)
+            }
+        } catch (error) {
+            console.error("Error:", error)
+            alert("Payment request failed")
+        }
+    }
+
     return (
         <>
             <Container
@@ -77,21 +127,19 @@ const ProductDetail = ({
                     gap: "10px",
                 }}>
                 <Box>
-                    {
-                        productLoading
-                            ? <Skeleton variant="rectangular" width="300px" height="300px" />
-                            : (
-                                <Box
-                                    component="img"
-                                    src={mainImage}
-                                    alt=""
-                                    loading="lazy"
-                                    width="300px"
-                                    height="300px"
-                                    sx={{ objectFit: "contain" }}
-                                />
-                            )
-                    }
+                    {productLoading ? (
+                        <Skeleton variant="rectangular" width="300px" height="300px" />
+                    ) : (
+                        <Box
+                            component="img"
+                            src={mainImage}
+                            alt=""
+                            loading="lazy"
+                            width="300px"
+                            height="300px"
+                            sx={{ objectFit: "contain" }}
+                        />
+                    )}
                     <ImageList sx={{ width: 290, overflowY: "unset", margin: 1 }} cols={4} rowHeight={60}>
                         {subImgList?.map((image, index) => {
                             return (
@@ -198,6 +246,7 @@ const ProductDetail = ({
                             <Button fullWidth={true} variant="contained">
                                 立即結帳
                             </Button>
+                            <button onClick={handlePayment}>ovis</button>
                             <Button
                                 fullWidth={true}
                                 variant="outlined"

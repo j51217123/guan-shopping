@@ -38,16 +38,16 @@ export function* createUserSaga(action) {
         const data = yield call(createUserApi, email, password)
         if (data.success) {
             yield put(createUserSuccess(data.uid))
-            yield put(checkAdmin(data.uid))
+            // yield put(checkAdmin(data.uid))
         } else {
             yield put(createUserFailure(data.error))
         }
     } catch (error) {
-        if (error.response.data.error === "The email address is already in use by another account.") {
+        if (error?.response?.data?.error === "The email address is already in use by another account.") {
             try {
                 const auth = getAuth()
                 const registerResult = yield call(signInWithEmailAndPassword, auth, email, password)
-                yield put(checkAdmin(registerResult.user.uid))
+                // yield put(checkAdmin(registerResult.user.uid))
                 yield call(showAlert, "帳戶登入成功", "success")
                 localStorage.setItem(
                     "user",
@@ -59,6 +59,7 @@ export function* createUserSaga(action) {
                 navigate("/")
             } catch (registerError) {
                 yield put(createUserFailure(error.message))
+                yield call(showAlert, "帳戶登入或註冊失敗", "error")
             }
         } else {
             yield put(createUserFailure(error.message))
@@ -72,7 +73,7 @@ export function* checkAdminSaga(action) {
         const uid = action.payload
         const data = yield call(checkAdminApi, uid)
         if (data.isMember) {
-            yield put(checkAdminSuccess(data.isMember))
+            // yield put(checkAdminSuccess(data.isMember))
             yield put({ type: setIsMember.type, payload: true })
             navigate("/")
         } else {
@@ -128,6 +129,7 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
                 yield put({ type: setIsMember.type, payload: true })
             } catch (registerError) {
                 yield put(loginFailure(registerError.message))
+                yield call(showAlert, "帳戶登入失敗", "error")
             }
         } else {
             yield put(loginFailure(error.message))

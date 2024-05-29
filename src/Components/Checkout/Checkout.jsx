@@ -18,7 +18,6 @@ import productSlice from "../../Redux/Product/ProductSlice"
 
 const { setIncrement, setDecrement, setRemove } = productSlice.actions
 
-
 function priceRow(qty, unit) {
     return qty * unit
 }
@@ -32,17 +31,11 @@ const Checkout = () => {
     const orderList = useSelector(state => state.products.orderList)
     const invoiceSubtotal = subtotal(orderList)
 
-    const handleIncrement = ({ quantity, productId }) => {
-        dispatch(setIncrement({ quantity, productId }))
-    }
+    const handleIncrement = title => dispatch(setIncrement(title))
 
-    const handleDecrement = ({ quantity, productId }) => {
-        dispatch(setDecrement({ quantity, productId }))
-    }
+    const handleDecrement = title => dispatch(setDecrement(title))
 
-    const handleRemove = ({ productId }) => {
-        dispatch(setRemove({ productId }))
-    }
+    const handleRemove = ({ productId }) => dispatch(setRemove({ productId }))
 
     return (
         <TableContainer component={Container} sx={{ minHeight: 600, mt: 3, overflow: "hidden" }}>
@@ -91,6 +84,7 @@ const Checkout = () => {
                 <TableBody>
                     {orderList.length > 0 ? (
                         <React.Fragment>
+                            {console.log(orderList)}
                             {orderList.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell sx={{ pl: 0, pr: 0, whiteSpace: "nowrap" }}>
@@ -162,11 +156,8 @@ const Checkout = () => {
                                                     width: "16px",
                                                     height: "16px",
                                                 }}
-                                                disabled={item.quantity === 1 ? true : false}
-                                                onClick={() => {
-                                                    const { productId, quantity } = item
-                                                    handleDecrement({ quantity, productId })
-                                                }}>
+                                                disabled={item.quantity === 1}
+                                                onClick={() => handleDecrement(item.title)}>
                                                 <RemoveIcon fontSize="inherit" />
                                             </IconButton>
                                             <Typography component="span" variant="button">
@@ -176,11 +167,8 @@ const Checkout = () => {
                                                 aria-label="add"
                                                 size="small"
                                                 sx={{ width: "16px", height: "16px" }}
-                                                disabled={item.quantity === item.stock ? true : false}
-                                                onClick={() => {
-                                                    const { productId, quantity } = item
-                                                    handleIncrement({ quantity, productId })
-                                                }}>
+                                                disabled={item.quantity === item.stock}
+                                                onClick={() => handleIncrement(item.title)}>
                                                 <AddIcon fontSize="inherit" />
                                             </IconButton>
                                         </Button>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Menu as MenuIcon, AccountCircle as AccountCircleIcon } from "@mui/icons-material";
+import React, { useState, useLayoutEffect } from "react"
+import { Link as RouterLink } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { Menu as MenuIcon, AccountCircle as AccountCircleIcon } from "@mui/icons-material"
 import {
     AppBar,
     Box,
@@ -14,28 +14,26 @@ import {
     Link,
     Tooltip,
     MenuItem,
-} from "@mui/material";
-import userSlice from "../../Redux/User/UserSlice";
-import { handleLogoutAuth } from "../../Utils/firebase";
-import Logo from "../../Assets/Images/logo-2.png";
+} from "@mui/material"
+import userSlice from "../../Redux/User/UserSlice"
+import Logo from "../../Assets/Images/logo-2.png"
 
-const { logoutRequest } = userSlice.actions;
+const { logoutRequest } = userSlice.actions
 
-const Header = () => {
-    const userState = useSelector((state) => state.user);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
+const Header = ({ isLogin }) => {
+    const dispatch = useDispatch()
+    const [anchorElNav, setAnchorElNav] = useState(null)
+    const [anchorElUser, setAnchorElUser] = useState(null)
+    const [pages, setPages] = useState(["Home", "Products", "Login", "Dashboard"])
     const [userMenuRoutes, setUserMenuRoutes] = useState([
         {
             path: "/login",
             query: "登入",
         },
-    ]);
+    ])
 
-    useEffect(() => {
-        if (userState.isLogin) {
+    useLayoutEffect(()=>{
+        if (isLogin === true) {
             setUserMenuRoutes([
                 {
                     path: "/dashboard",
@@ -45,39 +43,36 @@ const Header = () => {
                     path: "/",
                     query: "登出",
                 },
-            ]);
+            ])
+            setPages(["Home", "Products", "Dashboard"])
         } else {
             setUserMenuRoutes([
                 {
                     path: "/login",
                     query: "登入",
                 },
-            ]);
+            ])
+            setPages(["Home", "Products", "Login"])
         }
-    }, [userState.isLogin]);
-
-    const pages = ["Home", "Products", "Login", "Dashboard"];
+    },[isLogin])
 
     const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
+        setAnchorElNav(event.currentTarget)
+    }
     const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
+        setAnchorElUser(event.currentTarget)
+    }
 
     const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
+        setAnchorElNav(null)
+    }
 
     const handleCloseUserMenu = (setting) => {
         if (setting === "登出") {
-            dispatch(logoutRequest());
-            // handleLogoutAuth().then(() => {
-            //     navigate("/");
-            // });
+            dispatch(logoutRequest())
         }
-        setAnchorElUser(null);
-    };
+        setAnchorElUser(null)
+    }
 
     return (
         <AppBar
@@ -252,7 +247,7 @@ const Header = () => {
                 </Toolbar>
             </Container>
         </AppBar>
-    );
-};
+    )
+}
 
-export default Header;
+export default Header

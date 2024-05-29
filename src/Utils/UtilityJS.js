@@ -25,6 +25,6 @@ export const setNavigate = navigate => {
 
 export const navigate = to => {
     if (navigateFunction) {
-        setTimeout(() => navigateFunction(to), 1500)
+        setTimeout(() => navigateFunction(to), 1000)
     }
 }

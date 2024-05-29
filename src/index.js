@@ -9,33 +9,27 @@ import ScopedCssBaseline from "@mui/material/ScopedCssBaseline"
 import App from "./App"
 import "./index.css"
 import reportWebVitals from "./reportWebVitals"
+import { Container } from "@mui/material"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
-// const store = configureStore({
-//     reducer: {
-//         user: userSlice,
-//         products: productSlice,
-//     },
-// })
-
 root.render(
-    // <React.StrictMode>
+    <React.StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route
                     path="/*"
                     element={
                         // <Provider store={store}>
-                            <ScopedCssBaseline>
-                                <App />
-                            </ScopedCssBaseline>
+                        <ScopedCssBaseline>
+                            <App />
+                        </ScopedCssBaseline>
                         // </Provider>
                     }
                 />
             </Routes>
         </BrowserRouter>
-    // </React.StrictMode>
+    </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function

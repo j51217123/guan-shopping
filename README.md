@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+<div align="center">
+   <a href="https://guan-shopping-web.web.app/" title="guan-shopping" target="_blank">
+      <img src="src/Assets/Images/logo.jpg" alt="guan-shopping" width="100">
+   </a>
+   <h2>guan-shopping eCommerce 食品電商網站</h2>
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構而成的電子商務網站，支援 RWD，畫面以 Material UI 元件為主，樣式採用 CSS-in-JS 撰寫，平台使用者主要可分為管理員 (admin)、會員 (member) 兩種身分，管理員可自由新增、編輯、刪除商品。
 
-## Available Scripts
+## 線上演示
 
-In the project directory, you can run:
+- Demo：https://guan-shopping-web.web.app/
 
-### `npm start`
+## 使用技術
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 基礎應用
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- HTML
+- CSS
+- JavaScript (ES2015)
 
-### `npm test`
+### 前端框架、套件
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- React
+- React Hooks
+- React Router
+- Redux toolkit
+- Redux Saga
+- React Hook Form
+- Material UI
+- yup validation
+- axios
 
-### `npm run build`
+### Firebase 服務
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Authentication
+- Cloud Firestore
+- Cloud Storage
+- Cloud Function (建置中)
+- Hosting
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 其他工具
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- ESLint
+- Prettier
 
-### `npm run eject`
+### 專案功能
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- 使用 Firebase Authentication 管理用戶
+- 使用 Firebase Firestore 操作資料庫
+- 使用 Firebase Storage 上傳圖片
+- 使用 Google Cloud 儲存快取
+- 使用 Redux toolkit 管理狀態
+- 使用 React Hook Form 登入驗證
+- 使用 yup 上架、編輯商品驗證
+- 購物車 (CRUD)
+- 商品管理 (CRUD)
+- 骨架屏載入
+- 發送密碼重製郵件
+- 模擬金流結帳 (建置中)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 網站展示
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- 首頁
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+<img src="./src/readme/home.png" width="700">
 
-## Learn More
+- 商品列表
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<img src="./src/readme/productlist.png" width="700">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 商品資訊
 
-### Code Splitting
+<img src="./src/readme/productdetail.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 登入/註冊會員
 
-### Analyzing the Bundle Size
+<img src="./src/readme/login.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- 購物車
 
-### Making a Progressive Web App
+<img src="./src/readme/shoppingcart.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 後台 - 新增商品
 
-### Advanced Configuration
+<img src="./src/readme/addproduct.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- 後台 - 編輯商品
 
-### Deployment
+<img src="./src/readme/editproduct.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- 後台 - 刪除商品
 
-### `npm run build` fails to minify
+<img src="./src/readme/deleteproduct.png" width="700">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 骨架屏 - 商品列表
+
+<img src="./src/readme/listskeleton.png" width="700">
+
+- 骨架屏 - 商品資訊
+
+<img src="./src/readme/detailskeleton.png" width="700">

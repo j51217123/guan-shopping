@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import { Button, ImageListItem, ImageList, Typography, Box, Container, Skeleton } from "@mui/material"
 import TabPanel from "../TabPanel/TabPanel"
-import productSlice from "../../Redux/Product/ProductSlice"
-import "./ProductDetail.css"
-import axios from "axios"
 import Payment from "../Payment/Payment"
+import productSlice from "../../Redux/Product/ProductSlice"
+
+import "./ProductDetail.css"
 
 const { setOrderList } = productSlice.actions
 
@@ -57,11 +57,6 @@ const ProductDetail = ({
 
     const handleMouseOut = () => {
         setMainImage(mainImg)
-    }
-
-    const handlePayment = async () => {
-        const response = await axios.get('https://guan-shopping-backend.zeabur.app/test')
-        console.log("🚀 - response:", response.data)
     }
 
     return (
@@ -200,13 +195,7 @@ const ProductDetail = ({
                             </Box>
                         </Box>
                         <Box sx={{ display: "flex", gap: "8px" }}>
-                            <Button fullWidth={true} variant="contained">
-                                立即結帳
-                            </Button>
-                            <button className="ovis" onClick={handlePayment}>
-                                綠界 Ovis
-                            </button>
-                            <Payment/>
+                            <Payment totalAmount={itemQuantity * discountPrice} tradeDesc="ovisss" itemName="小UU"/>
                             <Button
                                 fullWidth={true}
                                 variant="outlined"

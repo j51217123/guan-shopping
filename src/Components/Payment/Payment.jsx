@@ -1,6 +1,6 @@
 import React from "react"
-import axios from "axios"
 import CryptoJS from "crypto-js"
+import { Button } from "@mui/material"
 
 ////////////////////////改以下參數即可////////////////////////
 //一、選擇帳號，是否為測試環境
@@ -40,20 +40,6 @@ const MerchantTradeDate = new Date().toLocaleDateString("zh-TW", {
     second: "2-digit",
     hour12: false,
 })
-
-//三、計算 CheckMacValue 之前
-// let ParamsBeforeCMV = {
-//     MerchantID: MerchantID,
-//     MerchantTradeNo: MerchantTradeNo,
-//     MerchantTradeDate: MerchantTradeDate.toString(),
-//     PaymentType: "aio",
-//     EncryptType: 1,
-//     TotalAmount: TotalAmount,
-//     TradeDesc: TradeDesc,
-//     ItemName: ItemName,
-//     ReturnURL: ReturnURL,
-//     ChoosePayment: ChoosePayment,
-// }
 
 //四、計算 CheckMacValue
 function CheckMacValueGen(parameters, algorithm, digest) {
@@ -100,35 +86,11 @@ function CheckMacValueGen(parameters, algorithm, digest) {
     return Step6
 }
 
-//五、將所有的參數製作成 payload
-// const AllParams = { ...ParamsBeforeCMV, CheckMacValue }
-// const inputs = Object.entries(AllParams)
-//     .map(function (param) {
-//         return `<input name=${param[0]} value="${param[1].toString()}"><br/>`
-//     })
-//     .join("")
-
-//六、製作送出畫面
-// const htmlContent = `
-// <!DOCTYPE html>
-// <html>
-// <head>
-//     <title>全方位金流測試</title>
-// </head>
-// <body>
-//     <form method="post" action="${APIURL}">
-// ${inputs}
-// <input type ="submit" value = "送出參數">
-//     </form>
-// </body>
-// </html>
-// `
-
-const Payment = ({ totalAmount, tradeDesc, itemName }) => {
+const Payment = ({ totalAmount, tradeDesc, itemName, fullWidth = true, ...rest }) => {
     const TotalAmount = totalAmount ? totalAmount : "100"
     const TradeDesc = tradeDesc ? tradeDesc : "測試敘述"
     const ItemName = itemName ? itemName : "測試名稱"
-
+    //三、計算 CheckMacValue 之前
     let ParamsBeforeCMV = {
         MerchantID: MerchantID,
         MerchantTradeNo: MerchantTradeNo,
@@ -140,48 +102,17 @@ const Payment = ({ totalAmount, tradeDesc, itemName }) => {
         ItemName: ItemName,
         ReturnURL: ReturnURL,
         ChoosePayment: ChoosePayment,
-        ClientBackURL: "https://guan-shopping-web.web.app/payment-result"
+        ClientBackURL: "https://guan-shopping-web.web.app/payment-result",
     }
     const CheckMacValue = CheckMacValueGen(ParamsBeforeCMV, algorithm, digest)
+    //五、將所有的參數製作成 payload -1
     const AllParams = { ...ParamsBeforeCMV, CheckMacValue }
-    const inputs = Object.entries(AllParams)
-        .map(function (param) {
-            return `<input name=${param[0]} type="hidden" value="${param[1].toString()}"><br/>`
-        })
-        .join("")
 
-    const htmlContent = `
-        <form method="post" id="payment_form" action="${APIURL}">
-            ${inputs}
-            <input type ="submit" value = "送出參數">
-            <script type="text/javascript">document.getElementById("payment_form").submit();</script>
-        </form>
-
-    `
-
-    const handlePayment = async () => {
-        // try {
-        //     const response = await axios.get("https://guan-shopping-backend.zeabur.app/test")
-        //     console.log("🚀 - data:", response.data)
-        //     console.log("🚀 - response:", response)
-
-        //     // 打開新窗口
-        //     const newWindow = window.open("", "_blank", "width=800,height=600")
-        //     if (newWindow) {
-        //         newWindow.document.open()
-        //         newWindow.document.write(response.data)
-        //         newWindow.document.close()
-        //     } else {
-        //         console.error("新窗口無法打開，可能被瀏覽器阻止了")
-        //     }
-        // } catch (error) {
-        //     console.error("Error fetching payment page:", error)
-        // }
-        // document.write(`${htmlContent}`)
+    const handlePayment = () => {
         const form = document.createElement("form")
         form.method = "post"
         form.action = APIURL
-
+        //五、將所有的參數製作成 payload -2
         Object.entries(AllParams).forEach(([key, value]) => {
             const input = document.createElement("input")
             input.type = "hidden"
@@ -195,9 +126,9 @@ const Payment = ({ totalAmount, tradeDesc, itemName }) => {
     }
 
     return (
-        <div>
-            <button onClick={handlePayment}>Start Payment</button>
-        </div>
+        <Button {...rest} fullWidth={fullWidth} variant="contained" onClick={handlePayment}>
+            結帳
+        </Button>
     )
 }
 

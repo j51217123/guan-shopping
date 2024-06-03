@@ -7,7 +7,7 @@ const PaymentResult = () => {
     useEffect(() => {
         // 假设支付成功后要重定向到首页
         setTimeout(() => {
-            navigate.push("/")
+            navigate("/")
         }, 2000) // 3秒后重定向到首页
     }, [navigate])
 

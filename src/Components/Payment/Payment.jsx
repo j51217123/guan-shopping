@@ -13,7 +13,7 @@ let isStage = true // 測試環境： true；正式環境：false
 // const TotalAmount = "100"
 // const TradeDesc = "測試敘述"
 // const ItemName = "測試名稱"
-const ReturnURL = "https://guan-shopping-backend.zeabur.app/payment/callback"
+const ReturnURL = "https://guan-shopping-web.web.app/payResult"
 const ChoosePayment = "ALL"
 
 ////////////////////////以下參數不用改////////////////////////
@@ -140,6 +140,7 @@ const Payment = ({ totalAmount, tradeDesc, itemName }) => {
         ItemName: ItemName,
         ReturnURL: ReturnURL,
         ChoosePayment: ChoosePayment,
+        ClientBackURL: "https://guan-shopping-web.web.app/payment-result"
     }
     const CheckMacValue = CheckMacValueGen(ParamsBeforeCMV, algorithm, digest)
     const AllParams = { ...ParamsBeforeCMV, CheckMacValue }

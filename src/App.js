@@ -3,10 +3,14 @@ import { Routes, Route, useNavigate } from "react-router-dom"
 import { compose } from "redux"
 import { useDispatch, useSelector } from "react-redux"
 import { Container } from "@mui/material"
+
 import productSlice from "./Redux/Product/ProductSlice"
-import Checkout from "./Components/Checkout/Checkout"
+import WithConfigProvider from "./Components/App/withConfigProvider"
+import withRedux from "./Components/App/withRedux"
+import Layout from "./Components/Common/Layout"
 import Home from "./Components/Home/Home"
 import Login from "./Components/Login/Login"
+import Checkout from "./Components/Checkout/Checkout"
 import ForgotPassword from "./Components/Common/ForgotPassword/ForgotPassword"
 import ProductDetail from "./Components/ProductDetail/ProductDetail"
 import ShoppingCart from "./Components/ShoppingCart/ShoppingCart"
@@ -14,10 +18,8 @@ import Dashboard from "./Components/Dashboard/Dashboard"
 import AddProduct from "./Components/Dashboard/AddProduct"
 import RemoveProduct from "./Components/Dashboard/RemoveProduct"
 import EditProduct from "./Components/Dashboard/EditProduct"
-import WithConfigProvider from "./Components/App/withConfigProvider"
-import withRedux from "./Components/App/withRedux"
+import PaymentResult from "./Components/PaymentResult/PaymentResult"
 import { setNavigate } from "./Utils/UtilityJS"
-import Layout from "./Components/Common/Layout"
 
 const { getProductsData } = productSlice.actions
 
@@ -42,6 +44,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Layout isLogin={isLogin} />}>
                     <Route path="/" element={<Home itemData={productsData} />} />
+                    <Route path="/payment-result" element={<PaymentResult />} />
                     <Route
                         path="/products"
                         element={

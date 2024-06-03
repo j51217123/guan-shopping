@@ -30,6 +30,7 @@ const ProductDetail = ({
     const [itemQuantity, setItemQuantity] = useState(quantity)
     const [mainImage, setMainImage] = useState(mainImg)
     const productLoading = useSelector(state => state.products.productLoading)
+    const orderList = useSelector(state => state.products.orderList)
 
     const handleIncrement = () => {
         setItemQuantity(itemQuantity + 1)
@@ -60,7 +61,7 @@ const ProductDetail = ({
     }
 
     const handlePayment = async () => {
-        const response = await axios.get('https://guan-shopping-backend.zeabur.app/test')
+        const response = await axios.get("https://guan-shopping-backend.zeabur.app/test")
         console.log("🚀 - response:", response.data)
     }
 
@@ -203,10 +204,7 @@ const ProductDetail = ({
                             <Button fullWidth={true} variant="contained">
                                 立即結帳
                             </Button>
-                            <button className="ovis" onClick={handlePayment}>
-                                綠界 Ovis
-                            </button>
-                            <Payment/>
+                            <Payment totalAmount={itemQuantity * discountPrice} tradeDesc="ovisss" itemName="小UU"/>
                             <Button
                                 fullWidth={true}
                                 variant="outlined"

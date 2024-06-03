@@ -18,6 +18,7 @@ import WithConfigProvider from "./Components/App/withConfigProvider"
 import withRedux from "./Components/App/withRedux"
 import { setNavigate } from "./Utils/UtilityJS"
 import Layout from "./Components/Common/Layout"
+import PaymentResult from "./Components/PaymentResult/PaymentResult"
 
 const { getProductsData } = productSlice.actions
 
@@ -42,6 +43,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Layout isLogin={isLogin} />}>
                     <Route path="/" element={<Home itemData={productsData} />} />
+                    <Route path="/payment-result" element={<PaymentResult />} />
                     <Route
                         path="/products"
                         element={

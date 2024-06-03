@@ -36,7 +36,6 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - Authentication
 - Cloud Firestore
 - Cloud Storage
-- Cloud Function (建置中)
 - Hosting
 
 ### 其他工具
@@ -57,7 +56,7 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - 商品管理 (CRUD)
 - 骨架屏載入
 - 發送密碼重製郵件
-- 模擬金流結帳 (建置中)
+- 模擬綠界金流結帳
 
 ## 網站展示
 
@@ -80,6 +79,10 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - 購物車
 
 <img src="./src/readme/shoppingcart.png" width="700">
+
+- 綠界模擬結帳
+
+<img src="./src/readme/ecpay.png" width="700">
 
 - 後台 - 新增商品
 

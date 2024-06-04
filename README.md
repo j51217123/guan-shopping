@@ -106,7 +106,7 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 
 ## 圖片引用來源
 
-- [官小二]
+- 官小二
 
 ## 聲明
 

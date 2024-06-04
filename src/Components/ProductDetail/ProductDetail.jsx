@@ -92,28 +92,35 @@ const ProductDetail = ({
                             sx={{ objectFit: "contain" }}
                         />
                     )}
-                    <ImageList sx={{ width: 290, overflowY: "unset", margin: 1 }} cols={4} rowHeight={60}>
-                        {subImgList?.map((image, index) => {
-                            return (
-                                <ImageListItem key={index}>
-                                    <Box
-                                        sx={{
-                                            height: 60,
-                                            objectFit: "contain",
-                                        }}
-                                        component="img"
-                                        src={image}
-                                        alt={title}
-                                        loading="lazy"
-                                        onMouseEnter={() => {
-                                            handleMouseEnter(image)
-                                        }}
-                                        onMouseOut={handleMouseOut}
-                                    />
-                                </ImageListItem>
+                    {
+                        subImgList
+                            ? (
+                                <ImageList sx={{ width: 290, overflowY: "unset", margin: 1 }} cols={4} rowHeight={60}>
+                                    {subImgList?.map((image, index) => {
+                                        return (
+                                            <ImageListItem key={index}>
+                                                <Box
+                                                    key={index}
+                                                    sx={{
+                                                        height: 60,
+                                                        objectFit: "contain",
+                                                    }}
+                                                    component="img"
+                                                    src={image}
+                                                    alt={title}
+                                                    loading="lazy"
+                                                    onMouseEnter={() => {
+                                                        handleMouseEnter(image)
+                                                    }}
+                                                    onMouseOut={handleMouseOut}
+                                                />
+                                            </ImageListItem>
+                                        )
+                                    })}
+                                </ImageList>
                             )
-                        })}
-                    </ImageList>
+                            : null
+                    }
                 </Box>
                 <Box sx={{ padding: "8px 12px" }}>
                     <Box
@@ -195,7 +202,7 @@ const ProductDetail = ({
                             </Box>
                         </Box>
                         <Box sx={{ display: "flex", gap: "8px" }}>
-                            <Payment totalAmount={itemQuantity * discountPrice} tradeDesc="ovisss" itemName="小UU"/>
+                            <Payment totalAmount={itemQuantity * discountPrice} tradeDesc={desc} itemName={title} />
                             <Button
                                 fullWidth={true}
                                 variant="outlined"

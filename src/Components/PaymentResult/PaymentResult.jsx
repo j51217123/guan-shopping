@@ -1,21 +1,34 @@
 import React, { useEffect } from "react"
-import { useNavigate  } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+
+import { Container } from "@mui/material"
 
 const PaymentResult = () => {
-    const navigate = useNavigate ()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        // 假设支付成功后要重定向到首页
         setTimeout(() => {
             navigate("/")
-        }, 2000) // 3秒后重定向到首页
+        }, 2000)
     }, [navigate])
 
+
     return (
-        <div>
-            <h1>Payment Successful</h1>
-            <p>You will be redirected to the homepage shortly...</p>
-        </div>
+        <Container
+            sx={{
+                minHeight: {
+                    xs: "calc( 100vh - 68.5px - 140px )",
+                    md: "calc( 100vh - 68.5px - 150px )",
+                    lg: "calc( 100vh - 68.5px - 150px )",
+                },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column'
+            }}>
+            <h1>付款成功</h1>
+            <p>請稍後，將自動重新導回首頁....</p>
+        </Container>
     )
 }
 

@@ -100,3 +100,11 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - 骨架屏 - 商品資訊
 
 <img src="./src/readme/detailskeleton.png" width="700">
+
+## 圖片引用來源
+
+- [官小二]
+
+## 聲明
+
+- 本作品內圖片、內容等，純粹為個人練習前端使用，不做任何商業用途。

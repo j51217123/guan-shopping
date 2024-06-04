@@ -3,7 +3,7 @@ import { Tabs, Tab, Typography, Box } from "@mui/material"
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
-    const { tabsImagesData } = props
+    // const { tabsImagesData } = props
 
     return (
         <div
@@ -14,9 +14,9 @@ function TabPanel(props) {
             {...other}>
             {value === index && (
                 <Box sx={{ p: 2, gap: "10px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    {tabsImagesData?.map((tabImages, index) => {
+                    {/* {tabsImagesData?.map((tabImages, index) => {
                         return <Box sx={{objectFit: 'contain'}} key={index} component="img" src={tabImages} width="800px" height="600px" />
-                    })}
+                    })} */}
                     <Typography dangerouslySetInnerHTML={{ __html: `${children}` }} sx={{ p: 1 }} />
                 </Box>
             )}
@@ -47,7 +47,7 @@ const BasicTabs = props => {
                     <Tab label="送貨及付款方式" {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            <TabPanel tabsImagesData={tabsImagesData} value={value} index={0}>
+            <TabPanel value={value} index={0}>
                 {tabDesc}
             </TabPanel>
             <TabPanel value={value} index={1}>

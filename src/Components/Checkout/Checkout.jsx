@@ -16,6 +16,7 @@ import {
 import { Delete as DeleteIcon, Remove as RemoveIcon, Add as AddIcon } from "@mui/icons-material"
 import productSlice from "../../Redux/Product/ProductSlice"
 import Payment from "../Payment/Payment"
+import axios from "axios"
 
 const { setIncrement, setDecrement, setRemove } = productSlice.actions
 
@@ -240,9 +241,17 @@ const Checkout = () => {
                             xs: 0,
                             sm: 0,
                             md: 0,
-                            lg: '27%'
+                            lg: 0,
                         },
-                        height: "14vh",
+                        paddingRight: {
+                            xs: '8%',
+                            sm: '16%',
+                            md: '24%',
+                            lg: '27%',
+                            xl: '30%'
+                        },
+                        height: '10vh',
+                        minHeight: '108px',
                         display: "flex",
                         background: "#eeeeee",
                         padding: "15px",
@@ -252,7 +261,7 @@ const Checkout = () => {
                         width: "100%",
                     }}>
                     <Typography>訂單金額 ${invoiceSubtotal}</Typography>
-                    <Payment sx={{maxWidth: '30%'}}/>
+                    <Payment sx={{maxWidth: '30%'}} />
                 </Box>
             ) : null}
         </Container>

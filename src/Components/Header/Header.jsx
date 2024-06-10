@@ -37,7 +37,7 @@ const Header = ({ isLogin }) => {
             setUserMenuRoutes([
                 {
                     path: "/dashboard",
-                    query: "訂單紀錄",
+                    query: "商品上架",
                 },
                 {
                     path: "/",

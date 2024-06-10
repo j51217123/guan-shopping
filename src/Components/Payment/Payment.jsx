@@ -1,6 +1,7 @@
 import React from "react"
 import CryptoJS from "crypto-js"
 import { Button } from "@mui/material"
+import axios from "axios"
 
 ////////////////////////改以下參數即可////////////////////////
 //一、選擇帳號，是否為測試環境
@@ -108,21 +109,51 @@ const Payment = ({ totalAmount, tradeDesc, itemName, fullWidth = true, ...rest }
     //五、將所有的參數製作成 payload -1
     const AllParams = { ...ParamsBeforeCMV, CheckMacValue }
 
-    const handlePayment = () => {
-        const form = document.createElement("form")
-        form.method = "post"
-        form.action = APIURL
-        //五、將所有的參數製作成 payload -2
-        Object.entries(AllParams).forEach(([key, value]) => {
-            const input = document.createElement("input")
-            input.type = "hidden"
-            input.name = key
-            input.value = value
-            form.appendChild(input)
-        })
+    const handlePayment = async () => {
+        // const form = document.createElement("form")
+        // form.method = "post"
+        // form.action = APIURL
+        // //五、將所有的參數製作成 payload -2
+        // Object.entries(AllParams).forEach(([key, value]) => {
+        //     const input = document.createElement("input")
+        //     input.type = "hidden"
+        //     input.name = key
+        //     input.value = value
+        //     form.appendChild(input)
+        // })
 
-        document.body.appendChild(form)
-        form.submit()
+        // document.body.appendChild(form)
+        // form.submit()
+        const params = {
+            totalAmount: totalAmount,
+            tradeDesc: tradeDesc,
+            itemName: itemName
+        }
+        try {
+            const response = await axios.get("https://guan-shopping-backend.zeabur.app/test", { params });
+            console.log("🚀 - response:", response);
+
+            const htmlContent = response.data;
+
+            // Create a new div element and set its innerHTML to the response HTML
+            const div = document.createElement('div');
+            div.innerHTML = htmlContent;
+
+            // Find the form element in the response HTML
+            const form = div.querySelector('form');
+
+            if (form) {
+                // Append the form to the body
+                document.body.appendChild(form);
+
+                // Submit the form
+                form.submit();
+            } else {
+                console.error('No form found in the response HTML');
+            }
+        } catch (error) {
+            console.error('Error fetching the form:', error);
+        }
     }
 
     return (

@@ -240,9 +240,17 @@ const Checkout = () => {
                             xs: 0,
                             sm: 0,
                             md: 0,
-                            lg: '27%'
+                            lg: 0,
                         },
-                        height: "14vh",
+                        paddingRight: {
+                            xs: '8%',
+                            sm: '16%',
+                            md: '24%',
+                            lg: '27%',
+                            xl: '30%'
+                        },
+                        height: '10vh',
+                        minHeight: '108px',
                         display: "flex",
                         background: "#eeeeee",
                         padding: "15px",

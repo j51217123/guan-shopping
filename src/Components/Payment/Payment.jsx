@@ -1,6 +1,8 @@
 import React from "react"
 import CryptoJS from "crypto-js"
 import { Button } from "@mui/material"
+import axios from "axios"
+import { useSelector } from "react-redux"
 
 ////////////////////////改以下參數即可////////////////////////
 //一、選擇帳號，是否為測試環境
@@ -43,7 +45,6 @@ const MerchantTradeDate = new Date().toLocaleDateString("zh-TW", {
 
 //四、計算 CheckMacValue
 function CheckMacValueGen(parameters, algorithm, digest) {
-    // const crypto = require("crypto")
     let Step0
 
     Step0 = Object.entries(parameters)
@@ -87,9 +88,15 @@ function CheckMacValueGen(parameters, algorithm, digest) {
 }
 
 const Payment = ({ totalAmount, tradeDesc, itemName, fullWidth = true, ...rest }) => {
+    const orderList = useSelector(state => state.products.orderList)
+
+    const orderNameList = orderList.map(item => {
+        return item.title
+    }).join()
+
     const TotalAmount = totalAmount ? totalAmount : "100"
     const TradeDesc = tradeDesc ? tradeDesc : "測試敘述"
-    const ItemName = itemName ? itemName : "測試名稱"
+    const ItemName = orderNameList
     //三、計算 CheckMacValue 之前
     let ParamsBeforeCMV = {
         MerchantID: MerchantID,
@@ -108,7 +115,7 @@ const Payment = ({ totalAmount, tradeDesc, itemName, fullWidth = true, ...rest }
     //五、將所有的參數製作成 payload -1
     const AllParams = { ...ParamsBeforeCMV, CheckMacValue }
 
-    const handlePayment = () => {
+    const handlePayment = async () => {
         const form = document.createElement("form")
         form.method = "post"
         form.action = APIURL
@@ -123,6 +130,36 @@ const Payment = ({ totalAmount, tradeDesc, itemName, fullWidth = true, ...rest }
 
         document.body.appendChild(form)
         form.submit()
+        // const params = {
+        //     totalAmount: totalAmount,
+        //     tradeDesc: tradeDesc,
+        //     itemName: itemName
+        // }
+        // try {
+        //     const response = await axios.get("https://guan-shopping-backend.zeabur.app/test", { params });
+        //     console.log("🚀 - response:", response);
+
+        //     const htmlContent = response.data;
+
+        //     // Create a new div element and set its innerHTML to the response HTML
+        //     const div = document.createElement('div');
+        //     div.innerHTML = htmlContent;
+
+        //     // Find the form element in the response HTML
+        //     const form = div.querySelector('form');
+
+        //     if (form) {
+        //         // Append the form to the body
+        //         document.body.appendChild(form);
+
+        //         // Submit the form
+        //         form.submit();
+        //     } else {
+        //         console.error('No form found in the response HTML');
+        //     }
+        // } catch (error) {
+        //     console.error('Error fetching the form:', error);
+        // }
     }
 
     return (

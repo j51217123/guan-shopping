@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 import CheckIcon from "@mui/icons-material/Check"
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
 import {
     Alert,
     Container,
@@ -17,6 +20,8 @@ import {
     Button,
     Avatar,
     Snackbar,
+    InputAdornment,
+    IconButton,
 } from "@mui/material"
 import userSlice from "../../Redux/User/UserSlice"
 // import { loginRequest } from "../../Utils/firebase"
@@ -29,8 +34,21 @@ const theme = createTheme()
 
 const Login = () => {
     const dispatch = useDispatch()
-    const userLoading = useSelector((state) => state.user.userLoading)
+    const [showPassword, setShowPassword] = useState({
+        password: false,
+        confirmPassword: false,
+    })
 
+    const handleClickShowPassword = type => {
+        setShowPassword(prev => ({
+            ...prev,
+            [type]: !prev[type],
+        }))
+    }
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault()
+    }
 
     const validationRules = {
         email: {
@@ -112,24 +130,52 @@ const Login = () => {
                             required
                             fullWidth
                             id="password"
-                            type="password"
+                            type={showPassword.password ? 'text' : 'password'}
                             label="Password"
                             margin="normal"
                             autoComplete="current-password"
                             error={!!errors?.password}
                             helperText={errors?.password ? `${errors.password.message}` : null}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => { handleClickShowPassword('password') }}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword.password ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
                             {...register("password", { required: "密碼不得為空", pattern: validationRules.password })}
                         />
                         <TextField
                             required
                             fullWidth
                             id="confirmPassword"
-                            type="password"
+                            type={showPassword.confirmPassword ? 'text' : 'password'}
                             label="Confirm Password"
                             autoComplete="current-password"
                             margin="normal"
                             error={!!errors?.confirmPassword}
                             helperText={errors?.confirmPassword ? `${errors.confirmPassword.message}` : null}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => { handleClickShowPassword('confirmPassword') }}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword.confirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
                             {...register("confirmPassword", {
                                 required: "確認密碼不得為空",
                                 validate: value => {

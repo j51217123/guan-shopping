@@ -13,6 +13,7 @@
 | [spec-standards.md](./spec-standards.md) | 開始新任務前 | 先寫五段式 spec，非目標比目標重要 |
 | [scope-guard.md](./scope-guard.md) | 執行任務過程 | 做被要求的事，不順手擴張，rule of three |
 | [security.md](./security.md) | 身分、金流、secret 相關改動 | 前端不放 secret，不用 localStorage 判斷身分，驗簽 |
+| [coding-standards.md](./coding-standards.md) | 撰寫 / 修改程式碼時 | React、Redux、表單、效能、命名、註解、import、error handling |
 
 ---
 

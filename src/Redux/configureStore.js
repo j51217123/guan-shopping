@@ -2,13 +2,15 @@ import { combineReducers, configureStore, getDefaultMiddleware } from "@reduxjs/
 
 import productSlice from "../Redux/Product/ProductSlice"
 import userSlice from "../Redux/User/UserSlice"
+import uiSlice from "../Redux/Ui/UiSlice"
 import { rootSaga } from '../Redux/index'
 import createSagaMiddleware from 'redux-saga'
 
 export const createReducer = () => {
     const rootReducer = combineReducers({
         products: productSlice.reducer,
-        user: userSlice.reducer
+        user: userSlice.reducer,
+        ui: uiSlice.reducer
     })
     return rootReducer
 }

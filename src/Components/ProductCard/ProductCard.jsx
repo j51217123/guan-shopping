@@ -1,5 +1,4 @@
-import React from "react"
-import { useSelector } from "react-redux"
+import React, { useState } from "react"
 import { styled } from "@mui/material/styles"
 import { Link as RouterLink } from "react-router-dom"
 import {
@@ -14,16 +13,35 @@ import {
     Skeleton,
 } from "@mui/material"
 
+const IMAGE_HEIGHT = 140
+
 const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
-    const productLoading = useSelector(state => state.products.productLoading)
+    const hasData = Boolean(title)
+    const [imageLoaded, setImageLoaded] = useState(false)
 
     return (
         <>
-            {productLoading ? (
-                <Box sx={{ width: "100%" }}>
-                    <Skeleton variant="rectangular" height={140} />
-                    <Skeleton variant="text" height={60} />
-                    <Skeleton variant="rectangular" height={46} />
+            {!hasData ? (
+                <Box
+                    sx={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "0 2px 6px 0 rgb(0 0 0 / 6%)",
+                        borderRadius: 1,
+                        overflow: "hidden",
+                    }}>
+                    <Skeleton variant="rectangular" animation="wave" height={IMAGE_HEIGHT} />
+                    <Box sx={{ p: 2, flexGrow: 1 }}>
+                        <Skeleton variant="text" animation="wave" sx={{ fontSize: "1.5rem" }} width="60%" />
+                        <Skeleton variant="text" animation="wave" />
+                        <Skeleton variant="text" animation="wave" />
+                        <Skeleton variant="text" animation="wave" width="80%" />
+                    </Box>
+                    <Box sx={{ p: 1, display: "flex", justifyContent: "flex-end" }}>
+                        <Skeleton variant="rectangular" animation="wave" width={80} height={32} />
+                    </Box>
                 </Box>
             ) : (
                 <Card
@@ -43,13 +61,39 @@ const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
                                 textDecoration: "none",
                                 color: "#000",
                             }}>
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image={imageUrl}
-                                alt={alt}
-                                sx={{ objectFit: "contain", padding: "15px", display: "block", width: "100%" }}
-                            />
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    height: IMAGE_HEIGHT,
+                                    width: "100%",
+                                    overflow: "hidden",
+                                }}>
+                                {!imageLoaded && (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        animation="wave"
+                                        sx={{ position: "absolute", inset: 0 }}
+                                    />
+                                )}
+                                <CardMedia
+                                    component="img"
+                                    image={imageUrl}
+                                    alt={alt}
+                                    onLoad={() => setImageLoaded(true)}
+                                    onError={() => setImageLoaded(true)}
+                                    sx={{
+                                        position: "absolute",
+                                        inset: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                        padding: "15px",
+                                        boxSizing: "border-box",
+                                        opacity: imageLoaded ? 1 : 0,
+                                        transition: "opacity 0.3s ease-in-out",
+                                    }}
+                                />
+                            </Box>
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: "bold" }}>
                                     {title}

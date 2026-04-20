@@ -1,4 +1,4 @@
-import { all, call, delay, put, select, takeEvery } from 'redux-saga/effects'
+import { call, put } from 'redux-saga/effects'
 import productSlice from '../Product/ProductSlice'
 import {
     getProductListFromFirestore,
@@ -35,16 +35,8 @@ export function* getProductListSaga(action) {
     try {
         const data = yield call(getProductListFromFirestore, action.payload)
         yield put({ type: getProductsDataSuccess.type, payload: data })
-        yield delay(1000)
         yield put({ type: setDelayLoading.type })
-        // const imageData = yield call(getProductImagesFromStorage, action.payload)
-        // yield put({ type: getProductImagesFromStorageSuccess.type, payload: imageData })
-        // const subImageData = yield call(getSubImagesFromStorage, action.payload)
-        // yield put({ type: getSubImagesFromStorageSuccess.type, payload: subImageData })
-        // const tabImageData = yield call(getTabImagesFromStorage, action.payload)
-        // yield put({ type: getTabImagesFromStorageSuccess.type, payload: tabImageData })
         yield put({ type: setProductsData.type })
-
     } catch (error) {
         yield put({ type: getProductsDataFailure.type, payload: error })
     }

@@ -6,6 +6,9 @@ import productSlice from "../../Redux/Product/ProductSlice"
 
 const { setOrderList } = productSlice.actions
 
+// 資料未到時顯示的骨架佔位數量，避免 footer 被推下造成 CLS
+const PLACEHOLDER_COUNT = 4
+
 const ProductCardList = () => {
     const dispatch = useDispatch()
     const productsData = useSelector(state => state.products.productsData)
@@ -22,6 +25,11 @@ const ProductCardList = () => {
         dispatch(setOrderList(orderInfo))
     }
 
+    const hasData = productsData?.length > 0
+    const items = hasData
+        ? productsData
+        : Array.from({ length: PLACEHOLDER_COUNT }, (_, i) => ({ placeholderKey: `sk-${i}` }))
+
     return (
         <Box mt={5} p={1}>
             <Typography
@@ -32,8 +40,8 @@ const ProductCardList = () => {
                 精選商品
             </Typography>
             <Grid container spacing={2}>
-                {productsData?.map(card => (
-                    <Grid item key={card.title} xs={12} sm={6} md={4} lg={3}>
+                {items.map(card => (
+                    <Grid item key={card.title || card.placeholderKey} xs={12} sm={6} md={4} lg={3}>
                         <ProductCard
                             imageUrl={card.mainImg}
                             title={card.title}

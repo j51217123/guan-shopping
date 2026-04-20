@@ -3,11 +3,14 @@ import { Routes, Route, useNavigate } from "react-router-dom"
 import { compose } from "redux"
 import { useDispatch, useSelector } from "react-redux"
 import { Container } from "@mui/material"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 import productSlice from "./Redux/Product/ProductSlice"
+import userSlice from "./Redux/User/UserSlice"
 import WithConfigProvider from "./Components/App/withConfigProvider"
 import withRedux from "./Components/App/withRedux"
 import Layout from "./Components/Common/Layout"
+import RequireAuth from "./Components/Common/RequireAuth"
 import Home from "./Components/Home/Home"
 import Login from "./Components/Login/Login"
 import Checkout from "./Components/Checkout/Checkout"
@@ -22,6 +25,7 @@ import PaymentResult from "./Components/PaymentResult/PaymentResult"
 import { setNavigate } from "./Utils/UtilityJS"
 
 const { getProductsData } = productSlice.actions
+const { authStateChanged } = userSlice.actions
 
 const ProductCardList = lazy(() => import("./Components/ProductCardList/ProductCardList"))
 
@@ -29,7 +33,7 @@ function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const productsData = useSelector(state => state.products.productsData)
-    const isLogin = localStorage.getItem("isMember") === "true" ? true : false
+    const isLogin = useSelector(state => state.user.isLogin)
 
     useEffect(() => {
         dispatch(getProductsData())
@@ -38,6 +42,18 @@ function App() {
     useEffect(() => {
         setNavigate(navigate)
     }, [navigate])
+
+    // 訂閱 Firebase 登入狀態，取代原本靠 localStorage 判斷（可被 DevTools 偽造）
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(getAuth(), user => {
+            dispatch(
+                authStateChanged(
+                    user ? { email: user.email, uid: user.uid } : null
+                )
+            )
+        })
+        return unsubscribe
+    }, [dispatch])
 
     return (
         <>
@@ -74,7 +90,13 @@ function App() {
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
                     <Route path="/Checkout" element={<Checkout />} />
                     <Route path="/ShoppingCart" element={<ShoppingCart />} />
-                    <Route path="/Dashboard" element={<Dashboard />}>
+                    <Route
+                        path="/Dashboard"
+                        element={
+                            <RequireAuth>
+                                <Dashboard />
+                            </RequireAuth>
+                        }>
                         <Route path="/Dashboard/addProduct" element={<AddProduct />} />
                         <Route path="/Dashboard/removeProduct" element={<RemoveProduct />} />
                         <Route path="/Dashboard/editProduct" element={<EditProduct />} />

@@ -49,11 +49,6 @@ export function* createUserSaga(action) {
                 const registerResult = yield call(signInWithEmailAndPassword, auth, email, password)
                 // yield put(checkAdmin(registerResult.user.uid))
                 yield call(showAlert, "帳戶登入成功", "success")
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify({ email: registerResult.user.email, uid: registerResult.user.uid, isLogin: true })
-                )
-                localStorage.setItem("isMember", true)
                 yield put({ type: setIsMember.type, payload: true })
                 yield put(loginSuccess(registerResult.user))
                 navigate("/")
@@ -93,8 +88,6 @@ export function* loginWithGoogleSaga() {
         const token = credential.accessToken
         const user = result.user
         yield put(loginSuccess(user))
-        localStorage.setItem("user", JSON.stringify({ email: result.user.email, uid: result.user.uid, isLogin: true }))
-        localStorage.setItem("isMember", true)
         navigate("/")
         yield put({ type: setIsMember.type, payload: true })
     } catch (error) {
@@ -108,9 +101,7 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
     try {
         const result = yield call(signInWithEmailAndPassword, auth, email, password)
         yield call(showAlert, "帳戶登入成功", "success")
-        const idTokenResult = yield call(getIdTokenResult, result.user)
-        localStorage.setItem("user", JSON.stringify({ email: result.user.email, uid: result.user.uid, isLogin: true }))
-        localStorage.setItem("isMember", true)
+        yield call(getIdTokenResult, result.user)
         yield put(loginSuccess(result.user))
         navigate("/")
         yield put({ type: setIsMember.type, payload: true })
@@ -119,11 +110,6 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
             try {
                 const registerResult = yield call(createUserWithEmailAndPassword, auth, email, password)
                 yield call(showAlert, "帳戶登入成功", "success")
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify({ email: registerResult.user.email, uid: registerResult.user.uid, isLogin: true })
-                )
-                localStorage.setItem("isMember", true)
                 yield put(loginSuccess(registerResult.user))
                 navigate("/")
                 yield put({ type: setIsMember.type, payload: true })
@@ -141,10 +127,8 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
 export function* logoutAuthSaga() {
     const auth = getAuth()
     try {
-        const result = yield call(signOut, auth)
+        yield call(signOut, auth)
         yield call(showAlert, "帳戶登出成功", "success")
-        localStorage.removeItem("user")
-        localStorage.removeItem("isMember")
         yield put(logoutSuccess())
         navigate("/")
         yield put({ type: setIsMember.type, payload: false })

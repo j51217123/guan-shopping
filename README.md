@@ -12,6 +12,51 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - Demo：https://guan-shopping-web.web.app/
 - 後端 API（綠界金流代理）：https://guan-shopping-backend.zeabur.app/
 
+## AI 協作架構
+
+> 兩年後重新維護這個專案時（2026-04），導入結構化 AI 協作設定，將過往踩坑固化為可執行的規範，讓未來 AI Agent（Claude Code / 類似工具）進入專案即能掌握做事規矩，降低 hallucination 與 scope drift。
+
+### 架構分層
+
+```
+CLAUDE.md              做事規矩（溝通語言、技術棧、安全紅線、Commit 規範）
+AGENTS.md              專案結構與模組職責（目錄、Components 分層、Redux 分層）
+.claude/
+  ├── AGENT-REFERENCE  Agent 索引與呼叫方式
+  ├── agents/          7 個專家（依職責 spawn 子 agent）
+  │   ├── development/ frontend / backend / devops
+  │   ├── quality/     qa / code-reviewer
+  │   └── product/     product-manager / ux-designer
+  └── rules/           6 份硬規範（按需載入）
+      ├── security              前端無 secret、身分 SSOT、金流驗簽
+      ├── coding-standards      React / Redux / 表單 / 效能 / 命名
+      ├── investigation-rigor   除錯紀律（先 root cause、2 次法則）
+      ├── scope-guard           範圍守門（不順手擴張）
+      ├── spec-standards        改動前的五段式 spec
+      └── branch-workflow       分支命名、commit 顆粒度、PR 四件套
+```
+
+### 設計原則
+
+- **CLAUDE.md 精簡**：每次 session 自動預載，僅放紅線與普世規範；細則移至 `rules/` 按需載入
+- **無 manager agent**：主 session 本身即 orchestrator，直接 spawn 專家 agent，不疊層
+- **Rules 與 Skills 分離**：Rules 是原則（declarative），Skills 是流程（procedural），職責不混用
+- **Shift-left testing**：單元測試由實作者自己寫，QA 專注策略、整合、E2E 與缺口監督
+- **Firestore schema 雙人共管**：由 frontend-developer 與 devops-engineer 協作設計
+- **每位 agent 有「紅旗」否決權**：違反安全、範圍、紀律的要求可拒絕執行並引導至正確路徑
+
+### 工作流強制項
+
+- 所有改動經 feature branch + PR，禁止直接 push master
+- Commit 遵循 Conventional Commits（`type(scope): subject` + zh-TW body）
+- PR 描述四件套：動機 / 改動摘要 / 測試方式 / 風險與回滾
+- `code-reviewer` agent 於 merge 前跨域守門（正確性 / 安全 / 效能 / 合規）
+- 「誰改 code，誰同步文件」— 8 類改動對應的文件更新路徑寫進 CLAUDE.md
+
+### 靈感來源
+
+架構靈感取自 MAYOFormAISolutions（多 sub-repo 的團隊級 AI 架構），但**僅移植骨架，刪除不適用於個人專案的重量級部分**（如 TypeScript CLI、SQLite FTS5 搜尋、9 個 Vault Protocol 狀態機）。保留 agent 分工、rules 硬規範、dry-run 原則等對個人開發仍有效益的部分。
+
 ## 使用技術
 
 ### 基礎應用
@@ -159,53 +204,6 @@ guan-shopping eCommerce 是一個基於 React.js + Material UI + Firebase 建構
 - Redux-Saga 換 Zustand（Saga 對此規模過重，但遷移風險大）
 - `UserSaga.js` 登入失敗自動註冊邏輯（危險但牽動既有使用者流程）
 - 依賴版本升級（Dependabot 顯示 100+ 漏洞，多為 `react-scripts` 傳遞依賴）
-
-## AI 協作架構（2026-04 導入）
-
-兩年後重新維護這個專案時，導入結構化 AI 協作設定，將過往踩坑固化為可執行的規範，讓未來 AI Agent（Claude Code / 類似工具）進入專案即能掌握做事規矩，降低 hallucination 與 scope drift。
-
-### 架構分層
-
-```
-CLAUDE.md              做事規矩（溝通語言、技術棧、安全紅線、Commit 規範）
-AGENTS.md              專案結構與模組職責（目錄、Components 分層、Redux 分層）
-.claude/
-  ├── AGENT-REFERENCE  Agent 索引與呼叫方式
-  ├── agents/          7 個專家（依職責 spawn 子 agent）
-  │   ├── development/ frontend / backend / devops
-  │   ├── quality/     qa / code-reviewer
-  │   └── product/     product-manager / ux-designer
-  └── rules/           6 份硬規範（按需載入）
-      ├── security              前端無 secret、身分 SSOT、金流驗簽
-      ├── coding-standards      React / Redux / 表單 / 效能 / 命名
-      ├── investigation-rigor   除錯紀律（先 root cause、2 次法則）
-      ├── scope-guard           範圍守門（不順手擴張）
-      ├── spec-standards        改動前的五段式 spec
-      └── branch-workflow       分支命名、commit 顆粒度、PR 四件套
-```
-
-### 設計原則
-
-- **CLAUDE.md 精簡**：每次 session 自動預載，僅放紅線與普世規範；細則移至 `rules/` 按需載入
-- **無 manager agent**：主 session 本身即 orchestrator，直接 spawn 專家 agent，不疊層
-- **Rules 與 Skills 分離**：Rules 是原則（declarative），Skills 是流程（procedural），職責不混用
-- **Shift-left testing**：單元測試由實作者自己寫，QA 專注策略、整合、E2E 與缺口監督
-- **Firestore schema 雙人共管**：由 frontend-developer 與 devops-engineer 協作設計
-- **每位 agent 有「紅旗」否決權**：違反安全、範圍、紀律的要求可拒絕執行並引導至正確路徑
-
-### 工作流強制項
-
-- 所有改動經 feature branch + PR，禁止直接 push master
-- Commit 遵循 Conventional Commits（`type(scope): subject` + zh-TW body）
-- PR 描述四件套：動機 / 改動摘要 / 測試方式 / 風險與回滾
-- `code-reviewer` agent 於 merge 前跨域守門（正確性 / 安全 / 效能 / 合規）
-- 「誰改 code，誰同步文件」— 8 類改動對應的文件更新路徑寫進 CLAUDE.md
-
-### 靈感來源
-
-架構靈感取自 MAYOFormAISolutions（多 sub-repo 的團隊級 AI 架構），但**僅移植骨架，刪除不適用於個人專案的重量級部分**（如 TypeScript CLI、SQLite FTS5 搜尋、9 個 Vault Protocol 狀態機）。保留 agent 分工、rules 硬規範、dry-run 原則等對個人開發仍有效益的部分。
-
----
 
 ## 圖片引用來源
 

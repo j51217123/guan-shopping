@@ -28,6 +28,7 @@ model: sonnet
 - `firebase.json` Hosting rewrites、cache header、headers
 - `.firebaserc` 專案綁定
 - `firestore.rules`（若新增）、Storage Rules
+- **Firestore collection / document shape 設計**（與 `frontend-developer` 協作）— 從 Rules、index、遷移成本角度審視 schema 合理性
 - `functions/`（若新增 Cloud Functions）
 - Zeabur 部署設定（後端環境變數注入）
 - `.env` / `.env.example` 合約同步

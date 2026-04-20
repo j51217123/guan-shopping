@@ -10,7 +10,8 @@
 | 前端開發 | `frontend-developer` | `agents/development/frontend-developer.md` | React 18、MUI 5、Redux Saga、React Hook Form |
 | 後端開發 | `backend-developer` | `agents/development/backend-developer.md` | Express、Node.js、綠界金流簽章與驗簽 |
 | DevOps | `devops-engineer` | `agents/development/devops-engineer.md` | Firebase、Zeabur 部署、相依管理、CI/CD |
-| QA | `qa-engineer` | `agents/quality/qa-engineer.md` | Jest + RTL、測試策略、Bug 分類 |
+| QA | `qa-engineer` | `agents/quality/qa-engineer.md` | 測試策略、整合 / E2E、覆蓋率把關 |
+| 程式審查 | `code-reviewer` | `agents/quality/code-reviewer.md` | PR 跨域審查、規範合規、merge 前守門 |
 | 產品經理 | `product-manager` | `agents/product/product-manager.md` | 需求釐清、User Story、優先序決策 |
 | UX 設計師 | `ux-designer` | `agents/product/ux-designer.md` | UI/UX 審視、RWD、a11y、文案 |
 
@@ -27,6 +28,7 @@
 請使用 backend-developer agent 審查金流 callback 驗簽
 請使用 devops-engineer agent 檢查 Firestore Rules
 請使用 qa-engineer agent 規劃新功能測試策略
+請使用 code-reviewer agent 審查這個 PR
 請使用 product-manager agent 釐清需求並寫成 spec
 請使用 ux-designer agent 審視 Dashboard 設計稿
 ```
@@ -54,9 +56,11 @@ subagent_type="ux-designer"
 | React 元件實作、RWD 修復、前端重構 | `frontend-developer` |
 | Express API、金流邏輯、後端安全 | `backend-developer` |
 | Firebase 設定、部署、相依升級 | `devops-engineer` |
-| 測試撰寫、測試策略、Bug 分析 | `qa-engineer` |
+| 測試策略、整合 / E2E、Bug 分析 | `qa-engineer` |
+| PR 跨域審查、合規把關、merge 守門 | `code-reviewer` |
 | 需求釐清、Story 拆分、優先序 | `product-manager` |
 | UI 審視、RWD / a11y 檢查、文案 | `ux-designer` |
+| Firestore schema 設計 | `frontend-developer` + `devops-engineer` 協作 |
 
 ---
 
@@ -72,6 +76,7 @@ frontend-developer → 實作 UI 與 state + 自己寫對應的單元 / 元件�
 backend-developer  → 實作 API（若需）+ 自己寫對應的單元測試
 qa-engineer        → 審視單元測試品質、補跨模組整合測試、更新 E2E 清單
 devops-engineer    → 設定環境變數、Rules、部署
+code-reviewer      → PR merge 前跨域審查（正確性 / 安全 / 效能 / 規範）
 ```
 
 ### Bug 修復流程

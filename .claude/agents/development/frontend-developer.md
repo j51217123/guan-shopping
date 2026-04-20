@@ -32,6 +32,7 @@ model: sonnet
 - CSS-in-JS（MUI sx、styled）、`*.css` 全域樣式
 - RWD、CLS、Bundle size 優化
 - **自己實作 / 修改範圍內的單元測試與元件測試**（Jest + RTL）
+- **Firestore collection / document shape 設計**（與 `devops-engineer` 協作）— 從使用端角度提出讀寫模式、欄位需求
 
 ❌ 不處理：
 - `backend/server.js` → 交給 backend-developer

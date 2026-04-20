@@ -15,6 +15,9 @@ backend/node_modules
 # production
 /build
 
+# firebase deploy cache（本機生成，無需追蹤）
+.firebase/
+
 # misc
 .DS_Store
 .env

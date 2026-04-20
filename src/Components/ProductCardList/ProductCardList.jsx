@@ -1,6 +1,6 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Box, Typography } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import ProductCard from "../ProductCard/ProductCard"
 import productSlice from "../../Redux/Product/ProductSlice"
 
@@ -11,7 +11,7 @@ const ProductCardList = () => {
     const productsData = useSelector(state => state.products.productsData)
 
     const handleAddToCart = item => {
-        let orderInfo = {
+        const orderInfo = {
             title: item.title,
             productId: item.productId,
             mainImg: item.mainImg,
@@ -23,38 +23,27 @@ const ProductCardList = () => {
     }
 
     return (
-        <Box mt={5} p={1} sx={{ gap: "20px" }}>
+        <Box mt={5} p={1}>
             <Typography
-                display="inline-block"
-                component="span"
                 align="center"
                 variant="h4"
-                mb={2}
-                sx={{ width: "100%", fontWeight: "bold" }}>
+                mb={3}
+                sx={{ fontWeight: "bold" }}>
                 精選商品
             </Typography>
-            <Box
-                display="flex"
-                sx={{
-                    gap: "15px",
-                    width: "100%",
-                    flexWrap: 'wrap'
-                }}>
-                {productsData?.map(card => {
-                    return (
+            <Grid container spacing={2}>
+                {productsData?.map(card => (
+                    <Grid item key={card.title} xs={12} sm={6} md={4} lg={3}>
                         <ProductCard
-                            key={card.title}
                             imageUrl={card.mainImg}
                             title={card.title}
                             alt={card.title}
                             desc={card.desc}
-                            handleAddToCart={() => {
-                                handleAddToCart(card)
-                            }}
+                            handleAddToCart={() => handleAddToCart(card)}
                         />
-                    )
-                })}
-            </Box>
+                    </Grid>
+                ))}
+            </Grid>
         </Box>
     )
 }

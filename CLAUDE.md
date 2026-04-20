@@ -226,6 +226,24 @@ chore: misc changes            ← 太模糊
 2. 更動 UI 流程者，golden path 手測一次
 3. `git diff` 自審：無 `console.log`、無 secret、無 debug code
 4. commit message 符合上述規範
+5. **同步文件**（見下方通則）
+
+### 文件同步通則
+
+**誰改 code，誰同步相關文件。** 不得讓文件落後於實作。
+
+| 改動類型 | 同步更新 |
+|---------|---------|
+| 新增 / 變動環境變數 | `.env.example` + `AGENTS.md#環境變數` |
+| 新增 / 移動目錄、重大檔案結構 | `AGENTS.md#目錄結構` |
+| 新增 / 變動路由 | `AGENTS.md#Components 分層`（受影響表格） |
+| 新增 / 變動 Redux domain | `AGENTS.md#Redux 分層` |
+| 新增 / 變動技術棧 | `AGENTS.md#技術摘要` + `CLAUDE.md#技術棧` |
+| 新增 / 變動規範 | `.claude/rules/` 對應檔案 + `README.md` |
+| 新增 / 變動 agent | `.claude/AGENT-REFERENCE.md` |
+| 已知技術債的處理 | `README.md#已知但未處理的項目` 標記完成或刪除 |
+
+若不確定該改哪裡，在 PR 內標註 `docs-sync-check` 請 `code-reviewer` 協助確認。
 
 ### 遇到問題時
 

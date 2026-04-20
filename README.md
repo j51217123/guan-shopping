@@ -53,10 +53,6 @@ AGENTS.md              專案結構與模組職責（目錄、Components 分層�
 - `code-reviewer` agent 於 merge 前跨域守門（正確性 / 安全 / 效能 / 合規）
 - 「誰改 code，誰同步文件」— 8 類改動對應的文件更新路徑寫進 CLAUDE.md
 
-### 靈感來源
-
-架構靈感取自 MAYOFormAISolutions（多 sub-repo 的團隊級 AI 架構），但**僅移植骨架，刪除不適用於個人專案的重量級部分**（如 TypeScript CLI、SQLite FTS5 搜尋、9 個 Vault Protocol 狀態機）。保留 agent 分工、rules 硬規範、dry-run 原則等對個人開發仍有效益的部分。
-
 ## 使用技術
 
 ### 基礎應用

@@ -34,53 +34,20 @@ React 18 + Material UI + Firebase 架構的食品電商網站（個人作品）�
 
 ## 編碼規範
 
-### 檔案與函式大小
+細則見 [`.claude/rules/coding-standards.md`](./.claude/rules/coding-standards.md)（檔案大小、React、Redux、表單、效能、命名、註解、import、error handling）。以下列紅線級規範，違反即為重大瑕疵：
 
-| 指標 | 上限 |
-|------|------|
-| 單一檔案 | 500 行 |
-| 單一函式 / 元件 | 80 行 |
-| JSX 巢狀深度 | 4 層 |
+### 安全紅線
 
-超過上限先考慮拆檔、拆元件、抽 custom hook。
+- **禁止**在前端（`src/`）寫入任何 secret：API Key、HashKey、HashIV、憑證
+- 金流、簽章、含 secret 的邏輯一律後端處理
+- 登入狀態以 `onAuthStateChanged` 為 SSOT，**禁止**用 `localStorage` 判斷身分
+- 路由守門用 `<RequireAuth>`，不在各頁面自行判斷
+- 詳見 [`.claude/rules/security.md`](./.claude/rules/security.md)
 
-### React 元件
+### 上限硬約束
 
-- 函式元件 + Hooks，不用 class component
-- 一個檔案一個 default export 的主元件
-- Props 解構於參數列，不寫 `props.xxx`
-- 樣式優先用 MUI `sx` prop；重複樣式抽 `styled()` 或 theme override
-- 條件渲染用三元 / `&&`，不用 IIFE
-- list 必須有穩定的 `key`，禁止 `key={index}`（除非列表真的是 immutable 順序）
-
-### Redux
-
-- 業務狀態放 Redux（product / user / cart / ui）
-- 純 UI state（開關、input）用 `useState`，不進 Redux
-- 每個 domain 一個 folder：`Redux/{Domain}/{domain}Slice.js` + `{domain}Saga.js`
-- Saga 僅處理副作用（Firebase / axios），不放 UI 邏輯
-- Selector 優先用 `useSelector((s) => s.x.y)`，複雜計算才用 `reselect`
-
-### 表單
-
-- 統一使用 `react-hook-form` + `yupResolver`
-- Schema 獨立於元件外（利於測試與重用）
-- `mode: 'onBlur'` 為預設，避免輸入中頻繁驗證
-
-### 安全
-
-- **禁止**在前端寫入 API Key、HashKey、HashIV、憑證（見 README `2026-04 安全與體驗重構`）
-- 金流、簽章、任何含 secret 的邏輯一律後端處理
-- Firebase 設定從 `process.env.REACT_APP_*` 讀取，`.env` 不進 git
-- 登入狀態以 `onAuthStateChanged` 訂閱為 SSOT，**禁止**用 `localStorage` 判斷身分
-- 路由守門用 `<RequireAuth>` 元件，不在各頁面自行判斷
-
-### 效能
-
-- 圖片 `loading="lazy"`（首屏以外）、明確指定 `width` / `height` 避免 CLS
-- 列表長度 > 50 筆考慮 `react-lazyload` 或虛擬捲動
-- `useMemo` / `useCallback` 只在實測有必要時加，不預先優化
-- Bundle 大小變化（新增 dep）須在 PR 描述說明
+- 單一檔案 ≤ 500 行、單一函式 / 元件 ≤ 80 行、JSX 巢狀 ≤ 4 層
+- 超過先拆檔 / 拆元件 / 抽 hook，不硬塞
 
 ---
 

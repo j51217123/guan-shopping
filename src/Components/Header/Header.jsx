@@ -24,10 +24,14 @@ const Header = ({ isLogin }) => {
     const dispatch = useDispatch()
     const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
-    const [pages, setPages] = useState(["Home", "Products", "Login", "Dashboard"])
+    const [pages, setPages] = useState([
+        { label: "首頁", path: "/" },
+        { label: "商品", path: "/products" },
+        { label: "登入", path: "/Login" },
+    ])
     const [userMenuRoutes, setUserMenuRoutes] = useState([
         {
-            path: "/login",
+            path: "/Login",
             query: "登入",
         },
     ])
@@ -36,23 +40,31 @@ const Header = ({ isLogin }) => {
         if (isLogin === true) {
             setUserMenuRoutes([
                 {
-                    path: "/dashboard",
-                    query: "商品上架",
+                    path: "/Dashboard",
+                    query: "商品管理",
                 },
                 {
                     path: "/",
                     query: "登出",
                 },
             ])
-            setPages(["Home", "Products", "Dashboard"])
+            setPages([
+                { label: "首頁", path: "/" },
+                { label: "商品", path: "/products" },
+                { label: "商品管理", path: "/Dashboard" },
+            ])
         } else {
             setUserMenuRoutes([
                 {
-                    path: "/login",
+                    path: "/Login",
                     query: "登入",
                 },
             ])
-            setPages(["Home", "Products", "Login"])
+            setPages([
+                { label: "首頁", path: "/" },
+                { label: "商品", path: "/products" },
+                { label: "登入", path: "/Login" },
+            ])
         }
     },[isLogin])
 
@@ -140,14 +152,14 @@ const Header = ({ isLogin }) => {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                                <MenuItem key={page.path} onClick={handleCloseNavMenu}>
                                     <Typography
                                         component={RouterLink}
                                         sx={{ color: "inherit", textDecoration: "none" }}
-                                        to={`${page === "Home" ? "/" : `/${page}`}`}
+                                        to={page.path}
                                         textAlign="center"
                                     >
-                                        {page}
+                                        {page.label}
                                     </Typography>
                                 </MenuItem>
                             ))}
@@ -168,8 +180,8 @@ const Header = ({ isLogin }) => {
                         {pages.map((page) => (
                             <Button
                                 component={RouterLink}
-                                to={`${page === "Home" ? "/" : `/${page}`}`}
-                                key={page}
+                                to={page.path}
+                                key={page.path}
                                 onClick={handleCloseNavMenu}
                                 sx={{
                                     my: 2,
@@ -198,7 +210,7 @@ const Header = ({ isLogin }) => {
                                     },
                                 }}
                             >
-                                {page}
+                                {page.label}
                             </Button>
                         ))}
                     </Box>

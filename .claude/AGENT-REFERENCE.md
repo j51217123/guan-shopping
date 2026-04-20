@@ -65,21 +65,32 @@ subagent_type="ux-designer"
 ### 新功能完整流程
 
 ```
-product-manager   → 釐清需求、寫 spec、排優先序
-ux-designer       → 審視設計、列互動狀態、a11y 檢查
-frontend-developer → 實作 UI 與 state
-backend-developer → 實作 API（若需）
-devops-engineer   → 設定環境變數、Rules、部署
-qa-engineer       → 規劃測試、補測試、回歸
+product-manager    → 釐清需求、寫 spec、排優先序
+ux-designer        → 審視設計、列互動狀態、a11y 檢查
+qa-engineer        → 決定測試分層策略（誰測什麼、到什麼程度）
+frontend-developer → 實作 UI 與 state + 自己寫對應的單元 / 元件測試
+backend-developer  → 實作 API（若需）+ 自己寫對應的單元測試
+qa-engineer        → 審視單元測試品質、補跨模組整合測試、更新 E2E 清單
+devops-engineer    → 設定環境變數、Rules、部署
 ```
 
 ### Bug 修復流程
 
 ```
-qa-engineer       → 收集重現步驟、評估嚴重度
-frontend/backend  → 找 root cause、修正
-qa-engineer       → 補回歸測試
+qa-engineer        → 收集重現步驟、評估嚴重度、寫會失敗的重現測試
+frontend/backend   → 找 root cause、修正（讓重現測試變綠）
+qa-engineer        → 更新回歸清單、確認分層合理
 ```
+
+### 測試職責分工
+
+| 測試類型 | 誰寫 |
+|---------|------|
+| 單元測試（純函式、hook、slice、saga 單一行為） | 實作者自己（frontend / backend） |
+| 元件測試（RTL，單一元件行為） | 實作者自己（frontend） |
+| 整合測試（多模組互動） | qa-engineer 主導，實作者協助 |
+| E2E 測試（使用者流程） | qa-engineer |
+| 測試策略 / 覆蓋率 / Bug 分類 | qa-engineer |
 
 ### 優化流程
 

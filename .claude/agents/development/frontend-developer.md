@@ -31,6 +31,7 @@ model: sonnet
 - `src/App.js`、`src/index.js` 路由與 Provider 組裝
 - CSS-in-JS（MUI sx、styled）、`*.css` 全域樣式
 - RWD、CLS、Bundle size 優化
+- **自己實作 / 修改範圍內的單元測試與元件測試**（Jest + RTL）
 
 ❌ 不處理：
 - `backend/server.js` → 交給 backend-developer
@@ -45,6 +46,7 @@ model: sonnet
 3. **改動前**：grep 既有實作，避免重複造輪
 4. **改動時**：檔案 ≤ 500 行、函式 ≤ 80 行、JSX 巢狀 ≤ 4 層
 5. **改動後**：`npm start` 無 console error / warning，golden path 手測
+6. **寫 code 必寫測試**：業務邏輯、表單驗證、Saga、權限守門元件必有測試覆蓋。策略分層與複雜 mock 設計有疑問時諮詢 `qa-engineer`
 
 ## 典型任務範例
 

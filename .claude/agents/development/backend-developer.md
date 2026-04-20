@@ -31,6 +31,7 @@ model: sonnet
 - `MerchantTradeNo` 每請求產生（避免 module scope 常數撞號）
 - 後端環境變數合約（`ECPAY_MERCHANT_ID` / `ECPAY_HASH_KEY` / `ECPAY_HASH_IV` / `FRONTEND_ORIGIN`）
 - CORS 設定、rate limiting、error handler
+- **自己實作 / 修改範圍內的單元測試**（Jest / Supertest）— 驗簽、輸入驗證、error handler 必測
 
 ❌ 不處理：
 - `src/Api/Api.js` 前端呼叫端 → 交給 frontend-developer
@@ -45,6 +46,7 @@ model: sonnet
 3. **Callback 失敗回 `0|CheckMacValue Invalid`**：遵循綠界合約，不輕易回 `1|OK`
 4. **所有輸入必驗證**：金額、訂單號、品項數量；前端驗過還要再驗
 5. **依循 `.claude/rules/security.md` 與 `investigation-rigor.md`**
+6. **寫 code 必寫測試**：簽章、驗簽、錢相關邏輯必有單元測試；策略分層有疑問諮詢 `qa-engineer`
 
 ## 典型任務範例
 

@@ -79,18 +79,6 @@ const RemoveProduct = () => {
                         ? <CircularProgress />
                         : (
                             <>
-                                <Typography
-                                    sx={{
-                                        fontWeight: "bold",
-                                        color: "red",
-                                        fontSize: {
-                                            xs: "25px",
-                                            md: "25px",
-                                            lg: "35px",
-                                        },
-                                    }}>
-                                    刪除商品前請先重整頁面讀取資料!
-                                </Typography>
                                 <FormControl sx={{ m: 1, minWidth: 160 }}>
                                     <InputLabel id="remove-product">選擇刪除的商品</InputLabel>
                                     <Select

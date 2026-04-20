@@ -70,22 +70,9 @@ const AddProduct = () => {
         desc: yup.string().required("欄位不得為空"),
         tabDesc: yup.string().required("欄位不得為空"),
         deliveryDesc: yup.string().required("欄位不得為空"),
-        imageUpload: yup.mixed().test("required", "請上傳商品圖片", (files, testContext) => {
-            if (files.length > 0) {
-                const selectedData = productsData.find(item => item.imageFileName === files[0].name)
-                if (files.length > 0 && selectedData !== undefined && files[0].name === selectedData.imageFileName) {
-                    return testContext.createError({
-                        message: `${files[0].name} 此圖片已存在`,
-                    })
-                } else if (!uploadProductInfo.productName.includes(files[0].name.split(".")[0])) {
-                    return testContext.createError({
-                        message: `${files[0].name} 與 ${uploadProductInfo.productName} 名稱不相符`,
-                    })
-                } else {
-                    return true
-                }
-            }
-        }),
+        imageUpload: yup
+            .mixed()
+            .test("required", "請上傳商品圖片", files => files && files.length > 0),
     })
 
     const {
@@ -237,21 +224,6 @@ const AddProduct = () => {
                 />
             ) : (
                 <>
-                    <Typography
-                        align="center"
-                        sx={{
-                            fontWeight: "bold",
-                            color: "red",
-                            fontSize: {
-                                xs: "20px",
-                                md: "25px",
-                                lg: "35px",
-                            },
-                        }}>
-                        新增商品前請先重整頁面讀取資料!
-                        <br />
-                        如更換商品圖，請先將檔名設定為商品名稱!
-                    </Typography>
                     <Box
                         component="form"
                         sx={{

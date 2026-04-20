@@ -17,13 +17,13 @@ const Dashboard = () => {
                 },
             }}>
             <List sx={{ p: 2, display: "inline-flex" }}>
-                <ListItemButton component={RouteLink} to="/Dashboard/addProduct">
+                <ListItemButton component={RouteLink} to="/dashboard/add-product">
                     <ListItemText primary="新增商品" />
                 </ListItemButton>
-                <ListItemButton component={RouteLink} to="/Dashboard/removeProduct">
+                <ListItemButton component={RouteLink} to="/dashboard/remove-product">
                     <ListItemText primary="刪除商品" />
                 </ListItemButton>
-                <ListItemButton component={RouteLink} to="/Dashboard/editProduct">
+                <ListItemButton component={RouteLink} to="/dashboard/edit-product">
                     <ListItemText primary="編輯商品" />
                 </ListItemButton>
             </List>

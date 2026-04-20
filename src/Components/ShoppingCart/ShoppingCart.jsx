@@ -163,7 +163,7 @@ const ShoppingCart = () => {
                     </List>
                 )}
                 {orderList.length > 0 ? (
-                    <Button component={RouterLink} to="/Checkout" onClick={() => setDrawerOpen(false)}>
+                    <Button component={RouterLink} to="/checkout" onClick={() => setDrawerOpen(false)}>
                         前往結帳
                     </Button>
                 ) : null}

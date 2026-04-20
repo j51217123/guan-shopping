@@ -88,27 +88,27 @@ function App() {
                             </Container>
                         }
                     />
-                    <Route path="/Login" element={<Login />} />
-                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
-                    <Route path="/Checkout" element={<Checkout />} />
-                    <Route path="/ShoppingCart" element={<ShoppingCart />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/shopping-cart" element={<ShoppingCart />} />
                     <Route
-                        path="/Dashboard"
+                        path="/dashboard"
                         element={
                             <RequireAuth>
                                 <Dashboard />
                             </RequireAuth>
                         }>
-                        <Route path="/Dashboard/addProduct" element={<AddProduct />} />
-                        <Route path="/Dashboard/removeProduct" element={<RemoveProduct />} />
-                        <Route path="/Dashboard/editProduct" element={<EditProduct />} />
+                        <Route path="/dashboard/add-product" element={<AddProduct />} />
+                        <Route path="/dashboard/remove-product" element={<RemoveProduct />} />
+                        <Route path="/dashboard/edit-product" element={<EditProduct />} />
                     </Route>
 
                     {productsData?.map(item => {
                         return (
                             <Route
                                 key={item.title}
-                                path={`ProductDetail/${item.title}`}
+                                path={`products/${item.title}`}
                                 element={<ProductDetail itemData={item} />}
                             />
                         )

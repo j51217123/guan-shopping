@@ -46,7 +46,7 @@ const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
                     <CardActionArea>
                         <Box
                             component={RouterLink}
-                            to={`/ProductDetail/${title}`}
+                            to={`/products/${title}`}
                             sx={{
                                 textDecoration: "none",
                                 color: "#000",

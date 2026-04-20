@@ -215,7 +215,7 @@ const Login = () => {
                                 <Typography
                                     component={RouteLink}
                                     sx={{ textDecoration: "none", color: "inherit" }}
-                                    to="/ForgotPassword">
+                                    to="/forgot-password">
                                     忘記密碼?
                                 </Typography>
                             </Grid>

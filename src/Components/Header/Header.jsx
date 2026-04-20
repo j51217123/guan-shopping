@@ -27,11 +27,11 @@ const Header = ({ isLogin }) => {
     const [pages, setPages] = useState([
         { label: "首頁", path: "/" },
         { label: "商品", path: "/products" },
-        { label: "登入", path: "/Login" },
+        { label: "登入", path: "/login" },
     ])
     const [userMenuRoutes, setUserMenuRoutes] = useState([
         {
-            path: "/Login",
+            path: "/login",
             query: "登入",
         },
     ])
@@ -40,7 +40,7 @@ const Header = ({ isLogin }) => {
         if (isLogin === true) {
             setUserMenuRoutes([
                 {
-                    path: "/Dashboard",
+                    path: "/dashboard",
                     query: "商品管理",
                 },
                 {
@@ -51,19 +51,19 @@ const Header = ({ isLogin }) => {
             setPages([
                 { label: "首頁", path: "/" },
                 { label: "商品", path: "/products" },
-                { label: "商品管理", path: "/Dashboard" },
+                { label: "商品管理", path: "/dashboard" },
             ])
         } else {
             setUserMenuRoutes([
                 {
-                    path: "/Login",
+                    path: "/login",
                     query: "登入",
                 },
             ])
             setPages([
                 { label: "首頁", path: "/" },
                 { label: "商品", path: "/products" },
-                { label: "登入", path: "/Login" },
+                { label: "登入", path: "/login" },
             ])
         }
     },[isLogin])

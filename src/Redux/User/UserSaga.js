@@ -11,8 +11,11 @@ import {
     sendPasswordResetEmail,
 } from "firebase/auth"
 import userSlice from "../User/UserSlice"
+import uiSlice from "../Ui/UiSlice"
 import { navigate } from "../../Utils/UtilityJS"
 import showAlert from "../../Components/Alert/Alert"
+
+const { showLoading, hideLoading } = uiSlice.actions
 
 const {
     setIsMember,
@@ -34,6 +37,7 @@ const {
 export function* createUserSaga(action) {
     const { email, password } = action.payload
 
+    yield put(showLoading())
     try {
         const data = yield call(createUserApi, email, password)
         if (data.success) {
@@ -60,6 +64,8 @@ export function* createUserSaga(action) {
             yield put(createUserFailure(error.message))
             yield call(showAlert, "帳戶登入失敗", "error")
         }
+    } finally {
+        yield put(hideLoading())
     }
 }
 
@@ -80,24 +86,26 @@ export function* checkAdminSaga(action) {
 }
 
 export function* loginWithGoogleSaga() {
+    yield put(showLoading())
     try {
         const provider = new GoogleAuthProvider()
         const auth = getAuth()
         const result = yield call(signInWithPopup, auth, provider)
-        const credential = GoogleAuthProvider.credentialFromResult(result)
-        const token = credential.accessToken
-        const user = result.user
-        yield put(loginSuccess(user))
+        GoogleAuthProvider.credentialFromResult(result)
+        yield put(loginSuccess(result.user))
         navigate("/")
         yield put({ type: setIsMember.type, payload: true })
     } catch (error) {
         yield put(loginFailure(error.message))
         yield call(showAlert, "帳戶登入失敗", "error")
+    } finally {
+        yield put(hideLoading())
     }
 }
 
 export function* loginWithEmailSaga({ payload: { email, password } }) {
     const auth = getAuth()
+    yield put(showLoading())
     try {
         const result = yield call(signInWithEmailAndPassword, auth, email, password)
         yield call(showAlert, "帳戶登入成功", "success")
@@ -121,6 +129,8 @@ export function* loginWithEmailSaga({ payload: { email, password } }) {
             yield put(loginFailure(error.message))
             yield call(showAlert, "帳戶登入失敗", "error")
         }
+    } finally {
+        yield put(hideLoading())
     }
 }
 

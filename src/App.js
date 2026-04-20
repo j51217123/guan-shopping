@@ -10,6 +10,7 @@ import userSlice from "./Redux/User/UserSlice"
 import WithConfigProvider from "./Components/App/withConfigProvider"
 import withRedux from "./Components/App/withRedux"
 import Layout from "./Components/Common/Layout"
+import LoadingMask from "./Components/Common/LoadingMask"
 import RequireAuth from "./Components/Common/RequireAuth"
 import Home from "./Components/Home/Home"
 import Login from "./Components/Login/Login"
@@ -57,6 +58,7 @@ function App() {
 
     return (
         <>
+            <LoadingMask />
             <Routes>
                 <Route path="/" element={<Layout isLogin={isLogin} />}>
                     <Route path="/" element={<Home itemData={productsData} />} />

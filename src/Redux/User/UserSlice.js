@@ -5,6 +5,7 @@ const initialState = {
     userLoading: false,
     isLogin: false,
     isMember: false,
+    authReady: false,
     error: null
 }
 
@@ -14,6 +15,17 @@ const userSlice = createSlice({
     reducers: {
         setIsMember(state, action) {
             state.isMember = action.payload
+        },
+        // Firebase onAuthStateChanged 來源；payload 為使用者物件或 null
+        authStateChanged(state, action) {
+            state.authReady = true
+            if (action.payload) {
+                state.isLogin = true
+                state.profile = action.payload
+            } else {
+                state.isLogin = false
+                state.profile = {}
+            }
         },
         registerRequest(state) {
             state.userLoading = true

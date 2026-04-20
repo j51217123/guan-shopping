@@ -20,16 +20,7 @@ const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
     return (
         <>
             {productLoading ? (
-                <Box
-                    sx={{
-                        width: {
-                            xs: "97%",
-                            sm: "97%",
-                            md: "45%",
-                            lg: "97%",
-                        },
-                        maxWidth: { xs: "97%", md: "47%", lg: "260px" },
-                    }}>
+                <Box sx={{ width: "100%" }}>
                     <Skeleton variant="rectangular" height={140} />
                     <Skeleton variant="text" height={60} />
                     <Skeleton variant="rectangular" height={46} />
@@ -37,13 +28,14 @@ const ProductCard = ({ handleAddToCart, imageUrl, title, alt, desc }) => {
             ) : (
                 <Card
                     sx={{
-                        maxWidth: { xs: "97%", md: "47%", lg: "23%" },
-                        width: "auto",
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
                         boxShadow: "0 2px 6px 0 rgb(0 0 0 / 6%)",
                         textAlign: "center",
-                        minWidth: { xs: "97%", md: "47%", lg: "260px" },
                     }}>
-                    <CardActionArea>
+                    <CardActionArea sx={{ flexGrow: 1 }}>
                         <Box
                             component={RouterLink}
                             to={`/products/${title}`}

@@ -71,9 +71,10 @@ function App() {
                                 maxWidth="lg"
                                 sx={{
                                     width: {
-                                        xs: '100%', // 小屏幕
-                                        sm: '80%', // 中等屏幕
-                                        md: '60%', // 大屏幕
+                                        xs: '100%',
+                                        sm: '95%',
+                                        md: '90%',
+                                        lg: '85%',
                                     },
                                     minHeight: {
                                         xs: "calc( 100vh - 68.5px - 140px )",

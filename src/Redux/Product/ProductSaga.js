@@ -14,6 +14,7 @@ import showAlert from '../../Components/Alert/Alert'
 const {
     setDelayLoading,
     setProductsData,
+    getProductsData,
     getProductsDataSuccess,
     getProductsDataFailure,
     getProductImagesFromStorageSuccess,
@@ -81,8 +82,7 @@ export function* setProductDataToFirestoreSaga(action) {
         const data = yield call(setProductDataToFirestore, action.payload)
         yield put({ type: setProductDataToFirestoreSuccess.type, payload: data })
         yield call(showAlert, '商品新增成功', 'success')
-        yield delay(1500)
-        yield call(() => window.location.reload())
+        yield put(getProductsData())
     } catch (error) {
         yield put({ type: setProductDataToFirestoreFailure.type, payload: error })
     }
@@ -93,8 +93,7 @@ export function* setUpdateSelectedProductToFirestoreSaga(action) {
         const data = yield call(setUpdateSelectedProductToFirestore, action.payload)
         yield put({ type: setUpdateSelectedProductToFirestoreSuccess.type, payload: data })
         yield call(showAlert, '商品編輯成功', 'success')
-        yield delay(1000)
-        yield call(() => window.location.reload())
+        yield put(getProductsData())
     } catch (error) {
         yield put({ type: setUpdateSelectedProductToFirestoreFailure.type, payload: error })
     }
@@ -105,8 +104,7 @@ export function* setRemoveProductDataFromFirestoreSaga(action) {
         const data = yield call(setRemoveProductDataFromFirestore, action.payload)
         yield put({ type: setRemoveProductDataFromFirestoreSuccess.type, payload: data })
         yield call(showAlert, '商品刪除成功', 'success')
-        yield delay(1000)
-        yield call(() => window.location.reload())
+        yield put(getProductsData())
     } catch (error) {
         yield put({ type: setRemoveProductDataFromFirestoreFailure.type, payload: error })
     }

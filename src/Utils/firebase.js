@@ -127,17 +127,21 @@ const setProductDataToFirestore = async (
     }
 }
 
+// 產生不重複檔名：{productName}_{timestamp}.{ext}。使用者上傳任何檔名都可。
+const buildStorageFileName = (imageFile, productName) => {
+    const parts = imageFile.name.split(".")
+    const ext = parts.length > 1 ? parts.pop() : "jpg"
+    return `${productName}_${Date.now()}.${ext}`
+}
+
 const setProductImageToStorage = async (imageFile, productName) => {
-    const imageRef = ref(storage, `Images/products/${imageFile.name}`)
+    const storageFileName = buildStorageFileName(imageFile, productName)
+    const imageRef = ref(storage, `Images/products/${storageFileName}`)
     try {
         await uploadBytes(imageRef, imageFile)
-        console.log("Uploaded a blob or file!")
-        const downloadURL = await getDownloadURL(imageRef);
-        console.log('File available at', downloadURL);
+        const downloadURL = await getDownloadURL(imageRef)
         const productDocRef = doc(db, "products", productName)
-        console.log("🚀 - productDocRef:", productDocRef)
-        await updateDoc(productDocRef, { mainImg: downloadURL })
-        console.log("Database updated with new image reference")
+        await updateDoc(productDocRef, { mainImg: downloadURL, imageFileName: storageFileName })
     } catch (err) {
         console.error("Error: ", err)
     }
@@ -199,17 +203,16 @@ const setProductImageToStorage = async (imageFile, productName) => {
 // }
 
 const setUploadProductImageToStorage = async (imageFile, productTitle, fileLength) => {
-    const imageRef = ref(storage, `Images/products/${imageFile.name}`)
+    if (!fileLength || fileLength === 0) return
+
+    const storageFileName = buildStorageFileName(imageFile, productTitle)
+    const imageRef = ref(storage, `Images/products/${storageFileName}`)
 
     try {
-        if(fileLength > 0) {
-            await uploadBytes(imageRef, imageFile)
-            console.log("Uploaded a blob or file!")
-            const downloadURL = await getDownloadURL(imageRef)
-            const productDocRef = doc(db, "products", productTitle)
-            await updateDoc(productDocRef, { mainImg: downloadURL })
-            console.log("Database updated with new image reference")
-        }
+        await uploadBytes(imageRef, imageFile)
+        const downloadURL = await getDownloadURL(imageRef)
+        const productDocRef = doc(db, "products", productTitle)
+        await updateDoc(productDocRef, { mainImg: downloadURL, imageFileName: storageFileName })
     } catch (error) {
         console.error("Error uploading file or updating database:", error)
     }

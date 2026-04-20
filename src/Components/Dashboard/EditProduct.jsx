@@ -51,30 +51,9 @@ const EditProduct = () => {
 
     useEffect(() => {}, [uploadTabImageList, imageUpload, editProductInfo])
 
+    // 編輯時不要求重新上傳圖片；若有上傳任何檔案都接受（firebase.js 會自動改名）
     const formValidate = yup.object().shape({
-        imageUpload: yup.mixed().test(
-            "repeat productName",
-            "${value} 此商品名稱已存在",
-            function(files) {
-                // 如果没有 `mainImg` 或者 `files` 为空数组，验证通过
-                if (mainImg === undefined || (mainImg && (!files || files.length === 0))) {
-                    return true;
-                }
-
-                // 获取文件名或从 mainImg 解码出的文件名
-                const fileName = files && files.length > 0 ? files[0].name.split(".")[0] : decodeURIComponent(mainImg);
-
-                // 检查文件名是否包含 productTitle
-                const isDuplicate = fileName.includes(productTitle);
-
-                if (!isDuplicate) {
-                    return this.createError({
-                        message: `${fileName} 與 ${productTitle} 商品名稱不相符`,
-                    });
-                }
-                return true;
-            }
-        ),
+        imageUpload: yup.mixed().notRequired(),
     })
 
     const {
@@ -234,21 +213,6 @@ const EditProduct = () => {
                         ? <CircularProgress />
                         : (
                             <>
-                                <Typography
-                                    align="center"
-                                    sx={{
-                                        fontWeight: "bold",
-                                        color: "red",
-                                        fontSize: {
-                                            xs: "20px",
-                                            md: "25px",
-                                            lg: "35px",
-                                        },
-                                    }}>
-                                    編輯商品前請先重整頁面讀取資料!
-                                    <br />
-                                    如更換商品圖，請先將檔名設定為商品名稱!
-                                </Typography>
                                 <FormControl sx={{ m: 1, minWidth: 160 }}>
                                     <InputLabel id="remove-product">選擇編輯的商品</InputLabel>
                                     <Select

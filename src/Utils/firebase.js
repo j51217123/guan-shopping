@@ -134,11 +134,16 @@ const buildStorageFileName = (imageFile, productName) => {
     return `${productName}_${Date.now()}.${ext}`
 }
 
+// Storage 圖片 cache 1 年，讓 CDN 與瀏覽器直接命中，避免每次重抓
+const IMAGE_UPLOAD_METADATA = {
+    cacheControl: "public, max-age=31536000, immutable",
+}
+
 const setProductImageToStorage = async (imageFile, productName) => {
     const storageFileName = buildStorageFileName(imageFile, productName)
     const imageRef = ref(storage, `Images/products/${storageFileName}`)
     try {
-        await uploadBytes(imageRef, imageFile)
+        await uploadBytes(imageRef, imageFile, IMAGE_UPLOAD_METADATA)
         const downloadURL = await getDownloadURL(imageRef)
         const productDocRef = doc(db, "products", productName)
         await updateDoc(productDocRef, { mainImg: downloadURL, imageFileName: storageFileName })
@@ -209,7 +214,7 @@ const setUploadProductImageToStorage = async (imageFile, productTitle, fileLengt
     const imageRef = ref(storage, `Images/products/${storageFileName}`)
 
     try {
-        await uploadBytes(imageRef, imageFile)
+        await uploadBytes(imageRef, imageFile, IMAGE_UPLOAD_METADATA)
         const downloadURL = await getDownloadURL(imageRef)
         const productDocRef = doc(db, "products", productTitle)
         await updateDoc(productDocRef, { mainImg: downloadURL, imageFileName: storageFileName })
@@ -247,7 +252,7 @@ const setProductTabImageToStorage = async imageFiles => {
         await Promise.all(
             imageFiles.map(async file => {
                 const imageRef = ref(storage, `Images/products/tabs/${file.productName}/${file.name}`)
-                await uploadBytes(imageRef, file.file)
+                await uploadBytes(imageRef, file.file, IMAGE_UPLOAD_METADATA)
                 console.log("Image uploaded successfully")
             })
         )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -8,6 +8,7 @@ import { v4 as uuid } from "uuid"
 import { Box, Button, Container, Typography, TextField, CircularProgress } from "@mui/material"
 import { PhotoCamera, Delete as DeleteIcon } from "@mui/icons-material"
 import productSlice from "../../Redux/Product/ProductSlice"
+import { PLACEHOLDER_IMG } from "./constants"
 
 const { setProductDataToFirestore } = productSlice.actions
 
@@ -36,18 +37,15 @@ const AddProduct = () => {
     })
     const [tabImageList, setTabImageList] = useState([])
     const dispatch = useDispatch()
-    useEffect(() => {
-        setUploadProductInfo({
-            ...uploadProductInfo,
-            productId: uuid(),
-        })
-    }, [productsData.length])
+    const submittedRef = useRef(false)
+    const prevProductCountRef = useRef(productsData.length)
 
     useEffect(() => {
-        setUploadProductInfo({
-            ...uploadProductInfo,
-            tabImageList,
-        })
+        setUploadProductInfo(prev => ({ ...prev, productId: uuid() }))
+    }, [])
+
+    useEffect(() => {
+        setUploadProductInfo(prev => ({ ...prev, tabImageList }))
     }, [tabImageList])
 
     const formValidate = yup.object().shape({
@@ -70,19 +68,32 @@ const AddProduct = () => {
         desc: yup.string().required("欄位不得為空"),
         tabDesc: yup.string().required("欄位不得為空"),
         deliveryDesc: yup.string().required("欄位不得為空"),
-        imageUpload: yup
-            .mixed()
-            .test("required", "請上傳商品圖片", files => files && files.length > 0),
+        imageUpload: yup.mixed().test("required", "請上傳商品圖片", files => files && files.length > 0),
     })
 
     const {
         register,
         handleSubmit,
         control,
+        reset,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(formValidate),
     })
+
+    useEffect(() => {
+        const grew = productsData.length > prevProductCountRef.current
+        if (submittedRef.current && grew) {
+            submittedRef.current = false
+            setUploadProductInfo({ ...initUploadProduct, productId: uuid() })
+            setImageUpload({ imageFile: {}, imageUrl: "" })
+            setTabImageList([])
+            reset()
+            const fileInput = document.getElementById("imageUpload")
+            if (fileInput) fileInput.value = ""
+        }
+        prevProductCountRef.current = productsData.length
+    }, [productsData.length, reset])
 
     const handleChange = (e, inputId) => {
         switch (inputId) {
@@ -176,11 +187,12 @@ const AddProduct = () => {
     const handleFormSubmit = () => {
         confirmAlert({
             title: `上傳商品`,
-            message: `確定要上傳${uploadProductInfo.title}?`,
+            message: `確定要上傳 ${uploadProductInfo.title} 商品?`,
             buttons: [
                 {
                     label: "是",
                     onClick: () => {
+                        submittedRef.current = true
                         dispatch(
                             setProductDataToFirestore({
                                 uploadProductInfo: {
@@ -188,7 +200,7 @@ const AddProduct = () => {
                                     mainImg: imageUrl,
                                 },
                                 imageFile,
-                            })
+                            }),
                         )
                     },
                 },
@@ -213,7 +225,7 @@ const AddProduct = () => {
     const { imageFile, imageUrl } = imageUpload
     return (
         <Box>
-            {productLoading ? (
+            {productLoading ?
                 <CircularProgress
                     sx={{
                         position: "absolute",
@@ -222,8 +234,7 @@ const AddProduct = () => {
                         transform: "translate(-35%, -50%)",
                     }}
                 />
-            ) : (
-                <>
+            :   <>
                     <Box
                         component="form"
                         sx={{
@@ -446,11 +457,7 @@ const AddProduct = () => {
                                         startAdornment: (
                                             <Box
                                                 component="img"
-                                                src={
-                                                    imageUrl !== ""
-                                                        ? imageUrl
-                                                        : "https://fakeimg.pl/250x200/?text=預覽圖&font=noto"
-                                                }
+                                                src={imageUrl !== "" ? imageUrl : PLACEHOLDER_IMG}
                                                 sx={{
                                                     objectFit: "contain",
                                                     width: "250px",
@@ -630,7 +637,7 @@ const AddProduct = () => {
                         </Box>
                     </Box>
                 </>
-            )}
+            }
         </Box>
     )
 }

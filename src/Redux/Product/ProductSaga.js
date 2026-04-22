@@ -7,7 +7,9 @@ import {
     getTabImagesFromStorage,
     setProductDataToFirestore,
     setUpdateSelectedProductToFirestore,
-    setRemoveProductDataFromFirestore
+    setRemoveProductDataFromFirestore,
+    uploadProductMainImage,
+    setProductTabImageToStorage
 } from "../../Utils/firebase"
 import showAlert from '../../Components/Alert/Alert'
 
@@ -82,7 +84,23 @@ export function* setProductDataToFirestoreSaga(action) {
 
 export function* setUpdateSelectedProductToFirestoreSaga(action) {
     try {
-        const data = yield call(setUpdateSelectedProductToFirestore, action.payload)
+        const { imageFile, fileLength, tabImageFiles, ...rest } = action.payload
+
+        // 先把新主圖上傳到 Storage 拿真實 download URL，再寫 Firestore，避免 blob URL 落地
+        // 註：File 實例的屬性（name、size）都在 prototype 上，Object.keys(file) 永遠是 []，故改用 instanceof
+        let mainImgOverride = {}
+        if (fileLength && fileLength > 0 && imageFile instanceof File) {
+            mainImgOverride = yield call(uploadProductMainImage, imageFile, rest.title)
+        }
+
+        if (tabImageFiles && tabImageFiles.length > 0) {
+            yield call(setProductTabImageToStorage, tabImageFiles)
+        }
+
+        const data = yield call(setUpdateSelectedProductToFirestore, {
+            ...rest,
+            ...mainImgOverride,
+        })
         yield put({ type: setUpdateSelectedProductToFirestoreSuccess.type, payload: data })
         yield call(showAlert, '商品編輯成功', 'success')
         yield put(getProductsData())

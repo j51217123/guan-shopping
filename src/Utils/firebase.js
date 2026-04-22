@@ -10,18 +10,18 @@ import {
     GoogleAuthProvider,
     sendPasswordResetEmail,
 } from "firebase/auth"
-import { getFirestore, updateDoc, deleteDoc, collection, getDocs, setDoc, doc } from "firebase/firestore"
+import { getFirestore, updateDoc, deleteDoc, collection, getDocs, setDoc, doc, writeBatch } from "firebase/firestore"
 
 const db = getFirestore()
 const storage = getStorage()
 const app = initializeApp(firebaseConfig)
 
 const setUpdateSelectedProductToFirestore = async (
-    { title, productId, originalPrice, discountPrice, desc, tabDesc, deliveryDesc, stock, quantity, imageFileName, mainImg },
+    { originalTitle, title, productId, originalPrice, discountPrice, desc, tabDesc, deliveryDesc, stock, quantity, imageFileName, mainImg },
     callBack
 ) => {
     try {
-        await updateDoc(doc(db, "products", title), {
+        const payload = {
             title,
             productId,
             originalPrice,
@@ -32,11 +32,23 @@ const setUpdateSelectedProductToFirestore = async (
             stock,
             quantity,
             imageFileName,
-            mainImg
-        })
+            mainImg,
+        }
+
+        // doc ID 綁定於 title，改名時 updateDoc 會因目標 doc 不存在而丟錯；
+        // 用 batch 原子執行「建新 doc + 刪舊 doc」避免中間狀態不一致。
+        if (originalTitle && originalTitle !== title) {
+            const batch = writeBatch(db)
+            batch.set(doc(db, "products", title), payload)
+            batch.delete(doc(db, "products", originalTitle))
+            await batch.commit()
+        } else {
+            await updateDoc(doc(db, "products", title), payload)
+        }
         callBack && callBack()
     } catch (err) {
         console.error("Error: ", err)
+        throw err
     }
 }
 
@@ -207,20 +219,13 @@ const setProductImageToStorage = async (imageFile, productName) => {
 //     }
 // }
 
-const setUploadProductImageToStorage = async (imageFile, productTitle, fileLength) => {
-    if (!fileLength || fileLength === 0) return
-
+// 純粹上傳主圖到 Storage，回傳下載 URL 與儲存檔名；不寫 Firestore，由 caller 決定寫入時機與目標 doc
+const uploadProductMainImage = async (imageFile, productTitle) => {
     const storageFileName = buildStorageFileName(imageFile, productTitle)
     const imageRef = ref(storage, `Images/products/${storageFileName}`)
-
-    try {
-        await uploadBytes(imageRef, imageFile, IMAGE_UPLOAD_METADATA)
-        const downloadURL = await getDownloadURL(imageRef)
-        const productDocRef = doc(db, "products", productTitle)
-        await updateDoc(productDocRef, { mainImg: downloadURL, imageFileName: storageFileName })
-    } catch (error) {
-        console.error("Error uploading file or updating database:", error)
-    }
+    await uploadBytes(imageRef, imageFile, IMAGE_UPLOAD_METADATA)
+    const downloadURL = await getDownloadURL(imageRef)
+    return { mainImg: downloadURL, imageFileName: storageFileName }
 }
 
 const setProductTabImageToStorage = async imageFiles => {
@@ -392,7 +397,7 @@ export {
     setRemoveProductDataFromFirestore,
     setProductImageToStorage,
     setProductDataToFirestore,
-    setUploadProductImageToStorage,
+    uploadProductMainImage,
     setProductTabImageToStorage,
     getProductListFromFirestore,
     getTabImagesFromStorage,

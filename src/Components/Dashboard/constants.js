@@ -1,0 +1,2 @@
+export const PLACEHOLDER_IMG =
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='200'><rect width='250' height='200' fill='%23f5f5f5'/><rect x='40' y='35' width='170' height='130' rx='8' fill='none' stroke='%23c0c0c0' stroke-width='2'/><circle cx='80' cy='75' r='10' fill='%23c0c0c0'/><path d='M55 155 L110 100 L145 135 L170 115 L205 155 Z' fill='%23c0c0c0'/><text x='125' y='185' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%239e9e9e'>Preview</text></svg>"

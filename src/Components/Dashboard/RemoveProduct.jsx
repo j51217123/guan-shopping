@@ -8,8 +8,6 @@ import {
     setRemoveProductTabImageFromStorage,
 } from "../../Utils/firebase"
 import productSlice from "../../Redux/Product/ProductSlice"
-import "react-confirm-alert/src/react-confirm-alert.css"
-import "./removeProduct.css"
 
 const { getProductsData, setRemoveProductDataFromFirestore } = productSlice.actions
 

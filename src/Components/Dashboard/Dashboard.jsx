@@ -1,6 +1,8 @@
 import React from "react"
 import { Link as RouteLink, Outlet } from "react-router-dom"
 import { Container, List, ListItemButton, ListItemText } from "@mui/material"
+import "react-confirm-alert/src/react-confirm-alert.css"
+import "./confirmAlert.css"
 
 const Dashboard = () => {
     return (

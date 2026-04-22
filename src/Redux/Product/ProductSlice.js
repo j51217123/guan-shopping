@@ -49,6 +49,24 @@ export const productSlice = createSlice({
 
         getProductsDataSuccess(state, action) {
             state.productsData = action.payload
+
+            // orderList 以 productId 為穩定 key 重新對齊最新 productsData；
+            // 商品被編輯（改名 / 換圖 / 改價）→ 同步覆蓋；被刪除 → 從購物車移除。
+            if (state.orderList.length > 0) {
+                state.orderList = state.orderList
+                    .map(item => {
+                        const fresh = action.payload.find(p => p.productId === item.productId)
+                        if (!fresh) return null
+                        return {
+                            ...item,
+                            title: fresh.title,
+                            mainImg: fresh.mainImg,
+                            stock: fresh.stock,
+                            discountPrice: fresh.discountPrice,
+                        }
+                    })
+                    .filter(Boolean)
+            }
         },
 
         setDelayLoading(state, action) {
